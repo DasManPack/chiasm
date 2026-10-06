@@ -1165,17 +1165,37 @@ class ChiasmFieldTests(unittest.TestCase):
         app = QApplication.instance() or QApplication([])
 
         class State:
-            @staticmethod
-            def recent_chiasm_trace(_limit):
-                return []
+            def __init__(self):
+                self.entries = []
 
-            @staticmethod
-            def record_chiasm_trace(*_args, **_kwargs):
-                pass
+            def recent_chiasm_trace(self, limit):
+                return [dict(entry) for entry in self.entries[:limit]]
 
+            def record_chiasm_trace(
+                self, album_id, *, title, artist, activity, limit
+            ):
+                if self.entries and self.entries[0]["album_id"] == album_id:
+                    prior = self.entries[0]["activity"].split("+")
+                    if activity not in prior:
+                        self.entries[0]["activity"] = "+".join([*prior, activity])
+                    self.entries[0]["recorded_at"] = 1.0
+                    return
+                self.entries.insert(
+                    0,
+                    {
+                        "album_id": album_id,
+                        "title": title,
+                        "artist": artist,
+                        "activity": activity,
+                        "recorded_at": 1.0,
+                    },
+                )
+                self.entries = self.entries[:limit]
+
+        state = State()
         feature = ChiasmFeature(
             object(),
-            State(),
+            state,
             local_intelligence=lambda: None,
             metadata=lambda: None,
             run_async=lambda *_args, **_kwargs: None,
@@ -1186,29 +1206,94 @@ class ChiasmFieldTests(unittest.TestCase):
         feature.build()
         feature.page.resize(800, 600)
         feature.page.show()
-        familiar = Album("familiar", "North Window", "Aster", "", -420, 190, 0)
-        target = Album("target", "Quiet Harbor", "Boreal", "", 960, -510, 1)
+        familiar = Album(
+            "familiar", "North Window", "Aster", "", -420, 190, 0, ("Ambient",)
+        )
+        target = Album(
+            "target", "Quiet Harbor", "Boreal", "", 960, -510, 1, ("Ambient",)
+        )
         albums = (familiar, target)
         feature.chiasm_canvas.set_albums(albums)
         feature._refresh_album_search_index(albums)
+        familiar_track = {
+            "track_id": "familiar-track",
+            "local_path": "/music/Aster/North Window/01.flac",
+            "title": "First Light",
+            "artist": "Aster",
+            "album": familiar.title,
+        }
+        target_track = {
+            "track_id": "target-track",
+            "local_path": "/music/Boreal/Quiet Harbor/01.flac",
+            "title": "Low Tide",
+            "artist": "Boreal",
+            "album": target.title,
+        }
+        feature.chiasm_album_tracks = {
+            familiar.id: [familiar_track],
+            target.id: [target_track],
+        }
+        feature.chiasm_track_to_album = {
+            familiar_track["local_path"]: familiar.id,
+            target_track["local_path"]: target.id,
+        }
         feature.chiasm_canvas.camera.zoom = 1.2
+        queued = []
+        feature.replaceQueueAndPlayRequested.connect(
+            lambda tracks, index, start: queued.append((tracks, index, start))
+        )
 
         feature.chiasm_canvas.setFocus()
         QTest.keyClick(feature.chiasm_canvas, Qt.Key_F, Qt.ControlModifier)
         app.processEvents()
         self.assertTrue(feature.album_search.isVisible())
-        feature.album_search.setText("Boreal")
+        feature.album_search.setText("North Window")
         feature._submit_album_search()
         app.processEvents()
 
-        self.assertEqual(feature.chiasm_canvas.focused_id, target.id)
+        self.assertEqual(feature.chiasm_canvas.focused_id, familiar.id)
         self.assertTrue(feature.chiasm_canvas._lens_open)
         self.assertEqual(
             (feature.chiasm_canvas.camera.center_x, feature.chiasm_canvas.camera.center_y),
-            (target.x, target.y),
+            (familiar.x, familiar.y),
         )
         self.assertEqual(feature.chiasm_canvas.camera.zoom, 1.2)
         self.assertFalse(feature.album_search.isVisible())
+
+        field = feature.chiasm_canvas
+        self.assertEqual(field._lens_horizon_targets, (target.id,))
+        self.assertTrue(field._follow_horizon_link(0))
+        app.processEvents()
+        self.assertEqual(field.focused_id, target.id)
+        self.assertIn("shared genre: Ambient", field.accessibleDescription())
+
+        QTest.mouseClick(field, Qt.LeftButton, pos=field._lens_play_rect.center().toPoint())
+        app.processEvents()
+        self.assertEqual(queued, [([target_track], 0, True)])
+        feature.on_track_changed(target_track)
+        app.processEvents()
+
+        QTest.mouseClick(
+            field,
+            Qt.LeftButton,
+            pos=field._lens_trace_tab_rect.center().toPoint(),
+        )
+        app.processEvents()
+        self.assertEqual(field._lens_panel, "trace")
+        self.assertEqual(field._lens_trace_targets[:2], (target.id, familiar.id))
+        familiar_row = field._lens_trace_targets.index(familiar.id)
+        QTest.mouseClick(
+            field,
+            Qt.LeftButton,
+            pos=field._lens_trace_rects[familiar_row].center().toPoint(),
+        )
+        app.processEvents()
+        self.assertEqual(field.focused_id, familiar.id)
+        self.assertEqual(
+            (field.camera.center_x, field.camera.center_y),
+            (familiar.x, familiar.y),
+        )
+        self.assertTrue(field._lens_open)
 
         feature.page.deleteLater()
         app.processEvents()

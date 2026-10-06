@@ -1184,6 +1184,8 @@ class ChiasmFieldTests(unittest.TestCase):
             page_titles={},
         )
         feature.build()
+        feature.page.resize(800, 600)
+        feature.page.show()
         familiar = Album("familiar", "North Window", "Aster", "", -420, 190, 0)
         target = Album("target", "Quiet Harbor", "Boreal", "", 960, -510, 1)
         albums = (familiar, target)

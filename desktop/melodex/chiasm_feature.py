@@ -166,7 +166,6 @@ class ChiasmFeature(QObject):
         self.album_search.setObjectName("chiasmAlbumSearch")
         self.album_search.setPlaceholderText("Album or artist")
         self.album_search.setAccessibleName("Find an album or artist in this collection")
-        self.album_search.setClearButtonEnabled(True)
         self.album_search.setFixedWidth(250)
         self.album_search.hide()
         self._album_search_model = QStandardItemModel(self.album_search)

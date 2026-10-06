@@ -66,4 +66,4 @@ Chiasm's original spatial field work is combined with software derived from Melo
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup. Please frame product ideas around spatial music exploration and explain how they fit the principle: **will this still make sense as a lens inside the collection?**
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup, the [developer quickstart](docs/DEVELOPER_QUICKSTART.md), [project status and stability](docs/developers/00_STATUS_AND_STABILITY.md), and the [ecosystem architecture](docs/developers/01_ECOSYSTEM_ARCHITECTURE.md). Please frame product ideas around spatial music exploration and explain how they fit the principle: **will this still make sense as a lens inside the collection?**

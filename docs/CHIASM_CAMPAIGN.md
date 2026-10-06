@@ -164,3 +164,27 @@ Explore for five minutes without coaching. Check that the initial clusters are r
 3. Preserve the spatial field during detail, lyrics, playback, and route exploration.
 4. Prefer useful stillness and direct manipulation to ambient motion.
 5. Keep Melodex production behavior outside the prototype changes.
+
+## Product campaigns after C10
+
+### Product bet
+
+Chiasm earns its place when a listener can start from an album they know, find a less familiar album through a credible collection relationship, start listening immediately, and return to their place without building a playlist or navigating a stack of pages. The field should make this loop feel natural, with very little permanent text.
+
+The proof task is: **find a familiar album, follow one understandable relationship to something less familiar, play it, then return to the starting point.** A visual effect, an algorithmic score, or a long feature list does not count as discovery by itself.
+
+| Campaign | User-visible outcome | Exit gate |
+|---|---|---|
+| **C11 — The discovery loop** | A listener can move from a known album to an unfamiliar one using the field, inspect why they are connected, play it, and return. | Five first-time listeners try the task without coaching; at least four complete it in three minutes, can describe the connection in their own words, and can return to the starting album. Record where each person hesitates. |
+| **C12 — Topography with meaning** | Album placement gives the listener useful orientation while remaining stable across scans and launches. | On a real collection, listeners can identify a meaningful nearby option and explain what the placement does and does not claim. No relation is inferred from screen distance alone; positions do not jump after an unchanged rescan. |
+| **C13 — A listening route you can steer** | Arc carries the listener from a chosen album into a short, evidence-based listening path while leaving control close at hand. | In a representative library, a listener can start, understand the next choice, steer to another album, pause, or take over immediately. A route with weak evidence is labeled plainly and never presented as personalized certainty. |
+| **C14 — Return to a lived-in field** | The listener recognizes the collection's geography and can revisit a prior exploration through Trace. | After closing and reopening Chiasm, the user can find a familiar region, revisit an earlier stop, and resume without a history page or loss of the current listening queue. Removed or changed albums recover cleanly. |
+| **C15 — Real-listener release proof** | A small group of external listeners can install Chiasm, add a collection, explore, play, and give useful feedback. | Run the same tasks on macOS, Windows, and Linux, including a large library. Publish the exact build SHA, test results, known limitations, and the highest-impact fixes before calling the preview ready for broader release. |
+
+### Campaign order and scope
+
+C11 is the next product campaign. It evaluates the core exploration loop already present in Field, Horizon, Arc, and Trace; it does not add a new visualization. C12 changes spatial organization only when C11 observations show that placement makes exploration hard to understand. C13 then improves the listening route using those real-library findings. C14 makes return behavior dependable, and C15 gathers independent evidence before broad release.
+
+Keep the work anchored to local collections and the listener's next action. Defer social rooms, online recommendation services, generative playlist creation, and heavyweight 3D until the discovery loop works reliably without them. Every campaign must end with a listener behavior that can be observed and a clear result that can be reported.
+
+**C11 starting condition:** the corrected C10 test matrix passes, and at least one current Chiasm build completes the clean-install folder-to-field flow. C10's human first-use and C9's remaining accessibility, reference-comparison, and representative-device checks stay open until their own gates are performed.

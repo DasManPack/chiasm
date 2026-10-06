@@ -196,6 +196,23 @@ class FieldCanvas(QWidget):
             else:
                 state += " Its lens is closed; press Enter to open it."
 
+        if self._lens_open and self._lens_panel == "horizon" and album is not None:
+            horizon = album_horizon(self.albums, album)
+            if horizon.links:
+                links = []
+                for link in horizon.links[:3]:
+                    target = self.album_by_id(link.album_id)
+                    if target is None:
+                        continue
+                    target_artist = f" by {target.artist}" if target.artist else ""
+                    links.append(
+                        f"{target.title}{target_artist}: {link.summary}"
+                    )
+                if links:
+                    state += " Horizon connections: " + "; ".join(links) + "."
+            else:
+                state += " Horizon has no named resolved connections."
+
         if self._lens_open and self._lens_panel == "trace":
             page_size = max(1, self._lens_trace_page_size)
             start = min(self._lens_trace_offset, max(0, len(self._lens_trace_entries) - 1))

@@ -11,6 +11,24 @@ Chiasm is an early spatial music-exploration experiment. We need to learn whethe
 
 These are temporary CI test builds, not signed or notarized public releases. macOS may ask you to confirm opening the app. Workflow artifacts are retained for a limited time.
 
+### Current C11 test build
+
+The discovery-loop build is commit [`609110a`](https://github.com/DasManPack/chiasm/commit/609110a89df691bbbbfeb645b4719d04848ca687). Use the matching workflow artifact for your device:
+
+- [Desktop builds](https://github.com/DasManPack/chiasm/actions/runs/37477412509): `Chiasm-macOS-arm64`, `Chiasm-macOS-intel`, or `Chiasm-Windows-x64`.
+- [Linux builds](https://github.com/DasManPack/chiasm/actions/runs/37477412429): `Chiasm-Linux-x86_64` (`.deb` and AppImage).
+- [Android build](https://github.com/DasManPack/chiasm/actions/runs/37477412604): `Chiasm-Android` (`.apk` and `.aab`). The Android app is a bridge companion; C11's spatial discovery task is desktop-only.
+
+### C11 discovery-loop test
+
+Run this with five people who have not used Chiasm. Prepare their own music collection in advance and leave the populated field ready. Do not explain the controls or point out Find, Horizon, or Trace before starting the timer.
+
+Read this task aloud: **“Start from an album you know well. Explore an album you do not know well, play it, then return to the album you started from.”** Allow three minutes without coaching. If someone asks for help, note the question and offer help only after the timed attempt ends.
+
+For each person, record whether they completed the task, elapsed time, where they hesitated, what relationship they thought connected the albums, and whether they returned to the correct starting album. Do not record album titles or other details from their private collection. Count a success only if they complete the loop within three minutes, describe the displayed relationship in their own words, and return to the starting album. The gate is at least four successes out of five; keep each person's hesitation notes even if they succeed.
+
+This test measures the discovery loop after a collection is ready. Record folder import, playback failures, accessibility issues, and screen-size problems separately so they remain visible rather than being hidden by the timed task.
+
 ## A useful 10-minute test
 
 - Can you tell what the field represents without reading instructions?

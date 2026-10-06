@@ -13,7 +13,7 @@ The public preview is experimental. The CI artifacts linked below are temporary 
 
 ### Current C11 test build
 
-The discovery-loop build is commit [`609110a`](https://github.com/DasManPack/chiasm/commit/609110a89df691bbbbfeb645b4719d04848ca687). Use the matching workflow artifact for your device, or download the newer [v0.1.0 public preview](https://github.com/DasManPack/chiasm/releases/tag/v0.1.0) after its release assets finish building:
+The discovery-loop build is commit [`609110a`](https://github.com/DasManPack/chiasm/commit/609110a89df691bbbbfeb645b4719d04848ca687). Use the matching workflow artifact for your device, or download the newer [v0.1.1 public preview](https://github.com/DasManPack/chiasm/releases/tag/v0.1.1) after its release assets finish building:
 
 - [Desktop builds](https://github.com/DasManPack/chiasm/actions/runs/37477412509): `Chiasm-macOS-arm64`, `Chiasm-macOS-intel`, or `Chiasm-Windows-x64`.
 - [Linux builds](https://github.com/DasManPack/chiasm/actions/runs/37477412429): `Chiasm-Linux-x86_64` (`.deb` and AppImage).

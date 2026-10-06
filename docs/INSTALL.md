@@ -1,6 +1,6 @@
 # Install Melodex (separate project)
 
-This page is for the Melodex music player, not Chiasm. For Chiasm, use the [Chiasm v0.1.0 preview](https://github.com/DasManPack/chiasm/releases/tag/v0.1.0) and the [Chiasm documentation map](README.md).
+This page is for the Melodex music player, not Chiasm. For Chiasm, use the [Chiasm v0.1.1 preview](https://github.com/DasManPack/chiasm/releases/tag/v0.1.1) and the [Chiasm documentation map](README.md).
 
 You do **not** need Python, Git, Android Studio, or any developer tools if you install a release build.
 

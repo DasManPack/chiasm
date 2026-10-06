@@ -4,6 +4,8 @@
 
 <p align="center"><strong>Explore your music, spatially.</strong></p>
 
+<p align="center"><a href="docs/README.md">Docs</a> · <a href="docs/FIRST_CONTRIBUTION.md">Contribute</a> · <a href="SUPPORT.md">Support</a></p>
+
 <p align="center">
   <a href="https://github.com/DasManPack/chiasm/actions/workflows/desktop.yml"><strong>Download a test build</strong></a> ·
   <a href="docs/CHIASM.md">How Chiasm works</a> ·
@@ -31,6 +33,8 @@ This preview retains inherited Melodex modules internally, including pages and t
 4. Add or select a local music folder, then explore the spatial field. Your audio files stay where they are.
 
 These are temporary test artifacts, not signed or notarized public releases. GitHub keeps workflow artifacts for a limited time. The current preview has been built on Apple Silicon, Intel Mac, and Windows; human usability and accessibility checks are still in progress.
+
+Platform notes: [Linux](docs/INSTALL_LINUX.md) · [macOS](docs/INSTALL_MACOS.md) · [Windows](docs/INSTALL_WINDOWS.md) · [Android](docs/INSTALL_ANDROID.md).
 
 ### Android companion
 

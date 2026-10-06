@@ -7,7 +7,14 @@ from typing import Any, Callable
 
 from PySide6.QtCore import QObject, Signal, Qt
 from PySide6.QtGui import QPixmap
-from PySide6.QtWidgets import QLabel, QHBoxLayout, QPushButton, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QFileDialog,
+    QLabel,
+    QHBoxLayout,
+    QPushButton,
+    QVBoxLayout,
+    QWidget,
+)
 
 
 class ChiasmFeature(QObject):
@@ -556,10 +563,53 @@ def create_chiasm_feature(host: Any) -> ChiasmFeature:
         )
     )
     feature.interactionMeasured.connect(host.responsiveness.record_interaction)
-    feature.addMusicFolderRequested.connect(host._choose_music_folder)
+    add_folder_handler = getattr(host, "_choose_music_folder", None)
+    if callable(add_folder_handler):
+        feature.addMusicFolderRequested.connect(add_folder_handler)
     host.player.trackChanged.connect(feature.on_track_changed)
     host.player.playingChanged.connect(feature.on_playing_changed)
     host.player.positionChanged.connect(feature.on_position_changed)
     host.pages["chiasm"] = feature.page
     host.stack.addWidget(feature.page)
     return feature
+
+
+def choose_music_folder(host: Any) -> None:
+    """Add a local folder through Chiasm's in-field first-use control."""
+    folder = QFileDialog.getExistingDirectory(host, "Choose a music folder")
+    if not folder:
+        return
+    roots = host.providers.local_roots()
+    path = Path(folder)
+    if path not in roots:
+        roots.append(path)
+    host.providers.configure_local_roots(roots)
+    came_from_home = host.current_page == "home"
+    host._start_local_scan("folder added")
+    if came_from_home:
+        host.open_page("library")
+
+
+def enter_chiasm_mode(host: Any) -> None:
+    """Make the spatial field the only visible application surface."""
+    from PySide6.QtGui import QAction
+    from PySide6.QtWidgets import QShortcut
+
+    host.open_page("chiasm")
+    host.navigation.ensure_lazy_page_built("chiasm")
+    page = host.chiasm_feature.page
+    host.stack.removeWidget(page)
+    inherited_shell = host.takeCentralWidget()
+    host._inherited_shell_widget = inherited_shell
+    if inherited_shell is not None:
+        inherited_shell.hide()
+    host.menuBar().hide()
+    for action in host.findChildren(QAction):
+        action.setEnabled(False)
+    for shortcut in host.findChildren(QShortcut):
+        shortcut.setEnabled(False)
+    host.setCentralWidget(page)
+    page.show()
+    host.setWindowTitle("Chiasm")
+    host.statusBar().hide()
+    host.resize(1440, 900)

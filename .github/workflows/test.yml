@@ -16,6 +16,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install Qt Multimedia system dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpulse0t64
       - run: pip install pytest numpy mutagen requests PySide6
       - run: python -m compileall -q desktop/melodex provider-sdk/examples/ecosystem
       - name: Desktop tests

@@ -1,12 +1,12 @@
-# Your First Melodex Contribution
+# Your First Chiasm Contribution
 
-This page is for people who want to contribute **to the Melodex repository** without first learning the whole project.
+This page is for people who want to contribute **to the Chiasm repository** without first learning the whole project.
 
 It is not another user or developer start page:
 
 - listeners should use [Start Here](START_HERE.md);
 - extension authors should use the [5-minute developer quickstart](DEVELOPER_QUICKSTART.md);
-- contributors to Melodex itself can use this page.
+- contributors to Chiasm itself can use this page.
 
 ## Pick one small lane
 
@@ -27,8 +27,8 @@ You do **not** need to understand Flow, the resolver, Qt, Android and the provid
 ## 1. Get the repository
 
 ```bash
-git clone https://github.com/Cliff-Lee/melodex.git
-cd melodex
+git clone https://github.com/DasManPack/chiasm.git
+cd chiasm
 git checkout -b my-small-change
 ```
 

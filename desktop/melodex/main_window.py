@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QEvent, Qt, QTimer, Signal, Slot, QObject
-from PySide6.QtGui import QAction, QColor, QDesktopServices, QKeySequence, QPixmap, QShortcut
+from PySide6.QtGui import QColor, QDesktopServices, QKeySequence, QPixmap
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QListWidget,
     QListWidgetItem, QStackedWidget, QLineEdit, QComboBox, QFileDialog, QMessageBox,
@@ -304,9 +304,6 @@ class MainWindow(QMainWindow):
             # but no persistent index yet. Once indexed, later launches load the
             # cache immediately and do not walk the NAS automatically.
             QTimer.singleShot(0, lambda: self._start_local_scan("initial index"))
-        # Chiasm is the product in this fork: make the spatial collection the
-        # first screen while retaining inherited host pages for setup/support.
-        self.open_page("chiasm")
         self._startup_mark("main_window_init_ready")
 
     def _playback_current_track_changed(self, track: object) -> None:
@@ -1743,28 +1740,6 @@ class MainWindow(QMainWindow):
     def open_page(self, name: str):
         self.navigation.open_page(name)
 
-    def enter_chiasm_mode(self) -> None:
-        """Show Chiasm as the app surface while retaining host services privately."""
-        self.navigation.ensure_lazy_page_built("chiasm")
-        page = self.chiasm_feature.page
-        self.stack.removeWidget(page)
-        inherited_shell = self.takeCentralWidget()
-        self._inherited_shell_widget = inherited_shell
-        if inherited_shell is not None:
-            inherited_shell.hide()
-        self.menuBar().hide()
-        for action in self.findChildren(QAction):
-            action.setEnabled(False)
-        for shortcut in self.findChildren(QShortcut):
-            shortcut.setEnabled(False)
-        self.setCentralWidget(page)
-        page.show()
-        self.setWindowTitle("Chiasm")
-        self.statusBar().hide()
-        self.shortcut_palette.setEnabled(False)
-        self.shortcut_palette_mac.setEnabled(False)
-        self.resize(1440, 900)
-
     def _refresh_explore_visibility(self) -> None:
         has_library=bool(self.providers.local_catalog_count())
         if hasattr(self,"explore_wall_card"):
@@ -2591,20 +2566,7 @@ class MainWindow(QMainWindow):
 
     # ------------------------------- sources/search
     def _choose_music_folder(self):
-        folder=QFileDialog.getExistingDirectory(self,"Choose a music folder")
-        if not folder:
-            return
-        roots=self.providers.local_roots()
-        p=Path(folder)
-        if p not in roots:
-            roots.append(p)
-        self.providers.configure_local_roots(roots)
-        if self.current_page == "chiasm":
-            self.chiasm_feature._status("Indexing collection…")
-        came_from_home = self.current_page == "home"
-        self._start_local_scan("folder added")
-        if came_from_home:
-            self.open_page("library")
+        choose_music_folder(self)
 
     def _rescan(self):
         self._start_local_scan("rescan")
@@ -2656,6 +2618,7 @@ class MainWindow(QMainWindow):
         message=scan_progress_message(payload)
         if message:
             self.statusBar().showMessage(message)
+            self.chiasm_feature._status(message, 0)
             if hasattr(self,"home_status"):
                 self.home_status.setText(message)
 
@@ -2695,8 +2658,7 @@ class MainWindow(QMainWindow):
         )
 
     def _start_local_scan(self, reason: str = "scan") -> None:
-        if self.current_page == "chiasm":
-            self.chiasm_feature._status("Indexing collection…", 0)
+        self.chiasm_feature._status("Indexing collection…", 0)
         roots=self.providers.local_roots()
         if not roots:
             self.statusBar().showMessage("Add a music folder first",3000)
@@ -2766,6 +2728,7 @@ class MainWindow(QMainWindow):
             if hasattr(self,"library_browser"):
                 self.library_browser.finish_scan("cancelled")
                 QTimer.singleShot(3500,self.library_browser.clear_scan_status)
+                self.chiasm_feature._status("Indexing cancelled", 4000)
             self._show_home()
             if bool(result.get("hard_cancelled")):
                 self.statusBar().showMessage(
@@ -2837,10 +2800,12 @@ class MainWindow(QMainWindow):
         if outcome["degraded"]:
             message=f"NAS/library warning · {storage_message}"
             self.statusBar().showMessage(message,12000)
+            self.chiasm_feature._status(message, 12000)
             if hasattr(self,"home_status"):
                 self.home_status.setText(storage_message)
         else:
             suffix=scan_change_suffix(changes)
+            self.chiasm_feature._status("Collection updated", 3500)
             self.statusBar().showMessage(
                 f"Music indexing complete · {count:,} tracks{suffix}",
                 6500,
@@ -2871,6 +2836,7 @@ class MainWindow(QMainWindow):
         )
         if hasattr(self,"library_browser"):
             self.library_browser.finish_scan("error",error=error_type)
+        self.chiasm_feature._status(f"Indexing failed · {error_type}", 6000)
         self._show_home()
         message=(
             "Music indexing stopped — your existing library was kept. "

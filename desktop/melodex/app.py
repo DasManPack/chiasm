@@ -58,11 +58,12 @@ def main() -> int:
     # and record it separately from MainWindow construction.
     startup.mark("main_window_import_start")
     from .main_window import MainWindow
+    from .chiasm_feature import enter_chiasm_mode
     startup.mark("main_window_import_ready")
 
     startup.mark("main_window_construct_start")
     win = MainWindow(startup_timeline=startup)
-    win.enter_chiasm_mode()
+    enter_chiasm_mode(win)
     startup.mark("main_window_construct_ready")
 
     guard.activationRequested.connect(lambda: _activate_window(win))

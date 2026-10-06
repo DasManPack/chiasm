@@ -1,13 +1,17 @@
-# Chiasm documentation
+# Chiasm documentation — a friendly documentation map
 
 Chiasm is an early spatial-first experiment in exploring music collections. Start with the project-specific pages below; the deeper Melodex-derived manuals describe inherited host, provider, and API code and may use Melodex names for those internal systems.
 
 ## Chiasm
 
+- [Start here](START_HERE.md)
 - [Project overview and interaction](CHIASM.md)
 - [Help test Chiasm](TESTING.md)
 - [Spatial campaign notes and acceptance gates](CHIASM_CAMPAIGN.md)
 - [Visual QA status](VISUAL_QA.md)
+- [Complete documentation index](ALL_DOCUMENTATION.md)
+- [First contribution](FIRST_CONTRIBUTION.md)
+- [Developer gateway](DEVELOPERS.md)
 
 ## Build and contribute
 

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "melodex-desktop"
-version = "0.1.0"
+version = "0.1.1"
 description = "Melodex — source-neutral music player with Flow and optional LLM control"
 requires-python = ">=3.11"
 dependencies = ["PySide6>=6.7,<7", "numpy>=2.0", "mutagen>=1.47", "requests>=2.31", "keyring>=25,<26"]

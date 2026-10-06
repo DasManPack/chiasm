@@ -1,10 +1,10 @@
 # Install Chiasm on Windows
 
-Chiasm v0.1.0 is an experimental public preview. The Windows builds are not code signed, so SmartScreen may show a warning.
+Chiasm v0.1.1 is an experimental public preview. The Windows builds are not code signed, so SmartScreen may show a warning.
 
 ## Download
 
-1. Open the [Chiasm v0.1.0 release](https://github.com/DasManPack/chiasm/releases/tag/v0.1.0).
+1. Open the [Chiasm v0.1.1 release](https://github.com/DasManPack/chiasm/releases/tag/v0.1.1).
 2. Download `Chiasm-Windows-x64-Setup.exe` to install, or `Chiasm-Windows-portable.zip` for a portable copy.
 3. If using the portable copy, extract the ZIP.
 4. Launch **Chiasm** from the Start menu or extracted folder.

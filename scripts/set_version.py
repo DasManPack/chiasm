@@ -32,7 +32,7 @@ def replace_once(path: Path, pattern: str, replacement: str) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Set all Melodex application-version surfaces together."
+        description="Set all Chiasm application-version surfaces together."
     )
     parser.add_argument("version", help="X.Y.Z or X.Y.Z.devN")
     args = parser.parse_args()
@@ -67,7 +67,7 @@ def main() -> int:
         f'versionName = "{version}"',
     )
 
-    print(f"Set Melodex app version to {version} (Android versionCode {code}).")
+    print(f"Set Chiasm app version to {version} (Android versionCode {code}).")
     print("Run: python scripts/version_check.py")
     return 0
 

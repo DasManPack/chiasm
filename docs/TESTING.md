@@ -9,11 +9,11 @@ Chiasm is an early spatial music-exploration experiment. We need to learn whethe
 3. Extract the ZIP. On macOS, open the DMG and move Chiasm to Applications. On Windows, run the installer or portable app.
 4. Add or select a local music folder. Chiasm reads the existing files in place; it does not move them.
 
-These are temporary CI test builds, not signed or notarized public releases. macOS may ask you to confirm opening the app. Workflow artifacts are retained for a limited time.
+The public preview is experimental. The CI artifacts linked below are temporary builds from the matching Chiasm commit, retained for a limited time; macOS is not notarized and Windows is not code signed.
 
 ### Current C11 test build
 
-The discovery-loop build is commit [`609110a`](https://github.com/DasManPack/chiasm/commit/609110a89df691bbbbfeb645b4719d04848ca687). Use the matching workflow artifact for your device:
+The discovery-loop build is commit [`609110a`](https://github.com/DasManPack/chiasm/commit/609110a89df691bbbbfeb645b4719d04848ca687). Use the matching workflow artifact for your device, or download the newer [v0.1.0 public preview](https://github.com/DasManPack/chiasm/releases/tag/v0.1.0) after its release assets finish building:
 
 - [Desktop builds](https://github.com/DasManPack/chiasm/actions/runs/37477412509): `Chiasm-macOS-arm64`, `Chiasm-macOS-intel`, or `Chiasm-Windows-x64`.
 - [Linux builds](https://github.com/DasManPack/chiasm/actions/runs/37477412429): `Chiasm-Linux-x86_64` (`.deb` and AppImage).

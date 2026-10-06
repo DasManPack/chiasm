@@ -7,7 +7,7 @@
 <p align="center"><a href="docs/README.md">Docs</a> · <a href="docs/FIRST_CONTRIBUTION.md">Contribute</a> · <a href="SUPPORT.md">Support</a></p>
 
 <p align="center">
-  <a href="https://github.com/DasManPack/chiasm/actions/workflows/desktop.yml"><strong>Download a test build</strong></a> ·
+  <a href="https://github.com/DasManPack/chiasm/releases/tag/v0.1.0"><strong>Download Chiasm v0.1.0</strong></a> ·
   <a href="docs/CHIASM.md">How Chiasm works</a> ·
   <a href="docs/TESTING.md">Test Chiasm</a> ·
   <a href="docs/CHIASM_CAMPAIGN.md">Development notes</a>
@@ -25,14 +25,11 @@ Chiasm is a distinct project derived from the open-source [Melodex](https://gith
 
 This preview retains inherited Melodex modules internally, including pages and technical names that support compatibility. Chiasm launches directly into its spatial field; those inherited pages, menus, and shortcuts are removed from the visible Chiasm experience. The public identity, launcher, app window, and test packages are Chiasm.
 
-## Try the preview
+## Try the public preview
 
-1. Open the [Build desktop workflow](https://github.com/DasManPack/chiasm/actions/workflows/desktop.yml) and choose its latest successful run.
-2. Download the `Chiasm-macOS-arm64`, `Chiasm-macOS-intel`, or `Chiasm-Windows-x64` artifact for your computer.
-3. Extract the ZIP. On macOS, open the included DMG and move Chiasm to Applications. On Windows, run the installer or the portable app.
-4. Add or select a local music folder, then explore the spatial field. Your audio files stay where they are.
+Download [Chiasm v0.1.0](https://github.com/DasManPack/chiasm/releases/tag/v0.1.0) for macOS, Windows, Linux, or Android. On macOS, open the DMG and move Chiasm to Applications; on Windows, run the installer or portable app. For Ubuntu or Debian, use the `.deb`; other compatible x86_64 Linux systems can use the AppImage. The Android app is an early bridge companion for a desktop host.
 
-These are temporary test artifacts, not signed or notarized public releases. GitHub keeps workflow artifacts for a limited time. The current preview has been built on Apple Silicon, Intel Mac, and Windows; human usability and accessibility checks are still in progress.
+This is an experimental public preview, not a stable release. The macOS builds are not notarized and Windows builds are not code signed. First-use, accessibility, real-library playback, and human discovery-loop checks remain in progress. Your audio files stay where they are.
 
 Platform notes: [Linux](docs/INSTALL_LINUX.md) · [macOS](docs/INSTALL_MACOS.md) · [Windows](docs/INSTALL_WINDOWS.md) · [Android](docs/INSTALL_ANDROID.md).
 

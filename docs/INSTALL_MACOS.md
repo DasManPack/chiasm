@@ -1,12 +1,12 @@
 # Install Chiasm on macOS
 
-Chiasm is currently distributed as a test build from GitHub Actions, not as a public release.
+Chiasm v0.1.0 is an experimental public preview. The macOS packages are not notarized.
 
 ## Download
 
-1. Open the [Build desktop workflow](https://github.com/DasManPack/chiasm/actions/workflows/desktop.yml).
-2. Choose the latest successful run and download `Chiasm-macOS-arm64` for Apple Silicon or `Chiasm-macOS-intel` for an Intel Mac.
-3. Unzip the artifact and open its `Chiasm-*.dmg` file.
+1. Open the [Chiasm v0.1.0 release](https://github.com/DasManPack/chiasm/releases/tag/v0.1.0).
+2. Download `Chiasm-macOS-arm64.dmg` for Apple Silicon or `Chiasm-macOS-intel.dmg` for an Intel Mac.
+3. Open the downloaded DMG.
 4. Drag **Chiasm** into **Applications**, eject the disk image, then launch Chiasm.
 
 Check **Apple menu → About This Mac** if you are unsure which Mac you have.
@@ -15,4 +15,4 @@ Check **Apple menu → About This Mac** if you are unsure which Mac you have.
 
 Chiasm opens in its spatial collection field. Choose **Add folder** if it has no albums yet, select a music folder, and let indexing finish. Your audio files remain in their original locations.
 
-These test builds are not notarized. Only follow macOS's open-anyway steps for a build downloaded from the Chiasm workflow above. Workflow artifacts expire; a future public release will have its own download instructions.
+Because this preview is not notarized, macOS may ask you to confirm opening it in Privacy & Security. Continue only with the DMG downloaded from the Chiasm release page above.

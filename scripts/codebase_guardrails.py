@@ -36,6 +36,9 @@ FORBIDDEN_MAIN_WINDOW_SNIPPETS = {
     "self.sources_list": "Sources widgets belong to SourcesFeature",
     "self.source_primary_button": "Sources widgets belong to SourcesFeature",
     "self.source_power_panel": "Sources widgets belong to SourcesFeature",
+    "def _build_chiasm": "Chiasm page construction belongs to ChiasmFeature",
+    "self.chiasm_canvas": "Chiasm field state belongs to ChiasmFeature",
+    "self.chiasm_arc_route_ids": "Chiasm Arc state belongs to ChiasmFeature",
 }
 
 # Journey must coordinate playback and application navigation semantically.
@@ -54,6 +57,13 @@ FORBIDDEN_PLAYBACK_FEATURE_SNIPPETS = {
     "self._current_track =": "canonical playback state belongs to PlaybackSessionState",
     "self._queue =": "canonical queue state belongs to PlaybackSessionState",
     "self._visual_position_ms =": "canonical playback progress belongs to PlaybackSessionState",
+}
+
+FORBIDDEN_CHIASM_FEATURE_SNIPPETS = {
+    "from .main_window import": "ChiasmFeature must not import MainWindow",
+    "self.main_window": "ChiasmFeature must not retain MainWindow",
+    "self.player.": "ChiasmFeature must request playback semantically",
+    "self.player =": "ChiasmFeature must not own FlowPlayer",
 }
 
 
@@ -110,6 +120,15 @@ def main() -> int:
         if snippet in playback_feature:
             failures.append(
                 f"desktop/melodex/playback_feature.py contains {snippet!r}; {reason}."
+            )
+
+    chiasm_feature = (ROOT / "desktop/melodex/chiasm_feature.py").read_text(
+        encoding="utf-8"
+    )
+    for snippet, reason in FORBIDDEN_CHIASM_FEATURE_SNIPPETS.items():
+        if snippet in chiasm_feature:
+            failures.append(
+                f"desktop/melodex/chiasm_feature.py contains {snippet!r}; {reason}."
             )
 
     if failures:

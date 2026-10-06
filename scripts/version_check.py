@@ -61,7 +61,7 @@ def expected_android_code(version: str) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Check Melodex application-version consistency."
+        description="Check Chiasm preview-version consistency."
     )
     parser.add_argument(
         "--release-tag",

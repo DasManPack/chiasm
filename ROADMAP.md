@@ -1,81 +1,29 @@
-# Melodex Roadmap
+# Chiasm Roadmap
 
-The roadmap has two parallel goals:
+Chiasm explores music collections as spatial, visual places with minimal persistent text. This roadmap describes the Chiasm experiment; it is separate from Melodex's roadmap and releases.
 
-1. make Melodex an excellent local-first music player;
-2. make Melodex a useful open music platform that other developers can extend.
+## Current focus
 
-## Current foundation
+- Launch directly into the spatial collection field.
+- Make adding a local music folder clear from the field itself.
+- Keep album artwork, playback, and collection navigation inside the same surface.
+- Ship clearly named Chiasm test packages for desktop and Android.
+- Gather feedback on whether the field supports discovery without requiring labels or search.
 
-- macOS and Windows desktop builds
-- Android Bridge client
-- Local Files and external providers
-- MPP provider installation
-- universal multi-source resolver
-- resolver inspection and per-song match memory
-- Flow
-- Play for Me
-- taste memory
-- Moments
-- optional LLM control
-- local authenticated control bridge
-- MCP control server
-- OpenAI-compatible LLM client
+## Next experiments
 
-## Ecosystem — current work
+- Improve the empty and loading states while keeping the interface quiet.
+- Explore more useful spatial arrangements for large and small collections.
+- Refine album focus, playback transport, Trace, and Arc interactions.
+- Improve first-run setup and communicate scan progress within the field.
+- Evaluate Chiasm's Android experience independently from its desktop field.
 
-- developer documentation portal
-- provider tutorials
-- experimental capability contracts: identity, metadata, artwork and lyrics
-- provenance/merge model
-- plugin registry design
-- legal/open reference providers
-- OpenAPI contract for the local control API
-- OpenAI function-tool schemas
-- example community plugins
-- desktop Capability Broker for identity, metadata, artwork and lyrics
-- `.mdxplugin` install/enable/disable/remove flow
-- `melodex-extension` init/validate/doctor/pack tooling
-- registry-backed Plugin Directory in the desktop app
-- SHA-256 verified remote package installation
-- canonical registry with installable legal/open reference packages
-- `melodex-registry` validate/verify tooling
-- installation provenance (manual vs registry, package hash/version/time)
-- Plugin Directory update awareness
-- 5-minute developer quickstart + explicit status/stability/trust documentation
-- CI documentation-link integrity checks
-- scrubbed third-party process environments
-- declared plugin configuration broker with secret-store support
-- playback-gateway host allowlist checks for provider HTTP(S) resources
-- canonical first-contribution/community onboarding path
-- append-only registry review history tied to package versions/hashes
-- redacted desktop diagnostics export for support
+## Out of scope for this experiment
 
-## Next — trust and platform
+- Replacing or renaming Melodex itself.
+- Building a second provider ecosystem or audio engine where inherited foundations already serve the experiment.
+- Adding persistent explanatory copy that competes with the collection.
 
-- richer authentication flows beyond declared configuration (for example browser/OAuth hand-off);
-- richer user-configurable preferred capability-provider UI;
-- provider health and diagnostics UI;
-- stronger permission-policy enforcement where practical;
-- signed provider/plugin packages;
-- verified-publisher keyring / revocation;
-- generated API-client examples.
+## How priorities change
 
-## Next — player
-
-- improved local-library indexing
-- artwork cache
-- more reliable phrase/beat-grid analysis
-- transition preview UI
-- Android queue and Flow controls
-- taste sync through Bridge
-
-## Later
-
-- optional encrypted multi-device state sync
-- iOS client through Provider Bridge
-- desktop stem-assisted transitions where hardware permits
-- audio-analysis extension capabilities
-- playlist import/export ecosystem
-- scrobbling capability
-- presence/now-playing capability
+Chiasm is experimental. Priorities may change based on hands-on testing. Report a concrete collection, device, or interaction that made exploration difficult through the project's issue tracker.

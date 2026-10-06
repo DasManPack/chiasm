@@ -18,13 +18,14 @@ If the answer is no, P13i remains open.
 ## Canonical captures
 
 `scripts/visual_qa_capture.py` renders deterministic representative scenes at
-1440×900 by default.
+1440×900 by default. CI also captures the full set at 1280×720 and 1024×640,
+so laptop-size clipping and hierarchy can be reviewed from the same run.
 
 The capture set includes:
 
 - Visuals shell / Track Sigil / grouped Watch–Explore selector
 - Profile Pulse
-- synced Lyric Flow
+- synced immersive Lyric Flow and the full Visuals page in Lyric Flow
 - untimed Lyric Flow
 - Constellation with a pinned recognition card
 - Sonic Weather
@@ -34,8 +35,28 @@ The capture set includes:
 - Minimal
 - reduced-Auto Sonic Weather
 - Lyric Flow empty state
+- bright and dark synthetic artwork
+- calm and energetic profiles plus sparse-acoustic, dense-rock, ambient,
+  electronic, bass-heavy and highly dynamic analysis fixtures
+- synced windowed Lyric Flow, sparse Constellation and short Memory Atlas
+
+The full-page Lyric Flow capture includes the mode selector, track identity,
+status, seek control and timed lyric state. The immersive capture isolates the
+lyrics scene itself.
 
 CI uploads these PNGs as a `visual-qa-captures` artifact.
+
+Each `manifest.json` records fixture coverage and reference-comparison status.
+Fixtures are synthetic state probes. They do not stand in for approved concept
+art or establish mockup parity.
+
+## Reference concepts
+
+No approved P13 reference concepts are stored in this repository. P13i can
+expand and render its deterministic coverage set without them, but it cannot
+close the mockup-parity gate until the approved concepts are reviewed beside
+the matching implementation captures. Record that comparison in the review;
+do not infer approval from the capture manifest.
 
 ## Review rubric
 
@@ -97,11 +118,12 @@ Before Campaign 13 closes, manually inspect:
 P13i is complete only when:
 
 1. deterministic capture generation is green;
-2. all package/test/performance checks remain green;
-3. no flagship capture contains a known visual defect;
-4. reduced Auto remains recognizably the same design;
-5. no new accessibility or interaction regression is introduced;
-6. the final screenshots are good enough for public-facing product material.
+2. each flagship capture has been reviewed beside its approved concept;
+3. all package/test/performance checks remain green;
+4. no flagship capture contains a known visual defect;
+5. reduced Auto remains recognizably the same design;
+6. no new accessibility or interaction regression is introduced;
+7. the final screenshots are good enough for public-facing product material.
 
 Do not open another visual redesign campaign merely to postpone obvious polish.
 Fix visual defects in P13i until this gate is met.

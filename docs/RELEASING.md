@@ -1,4 +1,4 @@
-# Releasing Melodex
+# Releasing Chiasm
 
 This is the current application-release process.
 
@@ -9,15 +9,15 @@ For the distinction between app, SDK, protocol and plugin versions, see [Release
 While development is in progress, `main` should normally use a development version such as:
 
 ```text
-0.7.3.dev0
+0.1.1.dev0
 ```
 
-Keep the working release summary in `docs/releases/next.md`. Before release, review it against the tested build, move it to `docs/releases/v<version>.md`, and verify the listed downloads against the artifacts CI produced. The release workflow uses that versioned file as the GitHub Release description. The v0.7.3 release notes are at [`docs/releases/v0.7.3.md`](releases/v0.7.3.md).
+Keep the working release summary in `docs/releases/next.md`. Before release, review it against the tested build, move it to `docs/releases/v<version>.md`, and verify the listed downloads against the artifacts CI produced. The release workflow uses that versioned file as the GitHub Release description. Chiasm v0.1.0 notes are at [`docs/releases/v0.1.0.md`](releases/v0.1.0.md).
 
 When the next release is ready, choose its stable version and update every application-version surface with one command. For example:
 
 ```bash
-python scripts/set_version.py 0.7.3
+python scripts/set_version.py 0.1.0
 ```
 
 That updates:
@@ -40,7 +40,7 @@ python scripts/version_check.py
 For a release tag, the same check is:
 
 ```bash
-python scripts/version_check.py --release-tag v0.7.3
+python scripts/version_check.py --release-tag v0.1.0
 ```
 
 A release check fails if:
@@ -87,20 +87,20 @@ Example:
 
 ```bash
 git add .
-git commit -m "release: v0.7.3"
+git commit -m "release: v0.1.0"
 git push origin main
 ```
 
-When a strict release version such as `0.3.0` reaches `main`, the **Release** workflow:
+When a strict release version such as `0.1.0` reaches `main`, the **Release** workflow:
 
 1. runs the release checks and test suites again;
 2. verifies the release tag name against all application-version surfaces;
-3. creates or verifies the exact `v0.7.3` tag at that commit;
+3. creates or verifies the exact `v0.1.0` tag at that commit;
 4. creates the GitHub Release and uploads the source archive;
 5. dispatches desktop, Android and Linux workflows against that exact commit;
 6. attaches their assets to the same GitHub Release after package smoke checks pass.
 
-Ordinary development versions such as `0.7.3.dev0` do **not** create a release.
+Ordinary development versions such as `0.1.1.dev0` do **not** create a release.
 
 Before changing a development version to a strict release version, the release-candidate PR should have successful **Tests**, **Build desktop**, **Build Linux packages**, and **Build Android** checks. Desktop PR packaging exercises macOS arm64, macOS Intel (while the compatible runner remains available) and Windows x64; Linux packaging smoke-tests the .deb/AppImage path separately.
 
@@ -112,15 +112,15 @@ Pull request and development-branch Linux builds may package a `.devN` version f
 
 The current workflows produce:
 
-- `Melodex-macOS-arm64.dmg`;
-- `Melodex-macOS-intel.dmg` while a compatible GitHub runner remains available;
-- `Melodex-Windows-x64-Setup.exe`;
-- `Melodex-Windows-portable.zip`;
-- `Melodex-Android.apk`;
-- `Melodex-Android.aab`;
-- `Melodex-linux-x86_64.deb`;
-- `Melodex-linux-x86_64.AppImage`;
-- `Melodex-vX.Y.Z-source.zip`.
+- `Chiasm-macOS-arm64.dmg`;
+- `Chiasm-macOS-intel.dmg` while a compatible GitHub runner remains available;
+- `Chiasm-Windows-x64-Setup.exe`;
+- `Chiasm-Windows-portable.zip`;
+- `Chiasm-Android.apk`;
+- `Chiasm-Android.aab`;
+- `Chiasm-linux-x86_64.deb`;
+- `Chiasm-linux-x86_64.AppImage`;
+- `Chiasm-vX.Y.Z-source.zip`.
 
 Code signing/notarisation credentials are optional repository secrets. A preview release may therefore contain unsigned artifacts; platform installation docs must describe the actual signing situation.
 
@@ -131,7 +131,7 @@ After the release, choose the next development target.
 For example:
 
 ```bash
-python scripts/set_version.py 0.6.2.dev0
+python scripts/set_version.py 0.1.1.dev0
 
 python scripts/version_check.py
 git add .

@@ -1,8 +1,10 @@
-# Contributing to Melodex
+# Contributing to Chiasm
 
-Thanks for helping build Melodex.
+Thanks for helping build Chiasm, an experimental spatial-first project derived from Melodex.
 
-If this is your first contribution to the repository, start with **[Your First Melodex Contribution](docs/FIRST_CONTRIBUTION.md)**.
+Product changes should make collection exploration clearer, quieter, and easier to navigate. The current tree retains Melodex-derived host systems and extension contracts; references to those internals are intentional and do not define Chiasm's product direction.
+
+If this is your first contribution to the repository, start with **[Your First Contribution](docs/FIRST_CONTRIBUTION.md)**.
 
 If your goal is to build a provider or enrichment plugin, start with the **[5-minute developer quickstart](docs/DEVELOPER_QUICKSTART.md)** rather than reading the whole repository.
 
@@ -14,7 +16,7 @@ The project welcomes small focused contributions. You do not need to understand 
 Work mainly in `desktop/` or `android/`.
 
 ### Music provider
-Use the public Provider SDK in `provider-sdk/`. Do not add source-specific web/API logic directly to Melodex Core unless it is a deliberate first-party integration.
+Use the inherited Provider SDK in `provider-sdk/`. Keep source-specific web/API logic in providers rather than coupling it to Chiasm's spatial field.
 
 Start with `docs/tutorials/BUILD_A_PROVIDER.md`.
 

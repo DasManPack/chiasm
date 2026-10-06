@@ -27,6 +27,7 @@ def evaluate_responsiveness_summary(
     *,
     require_interactions: bool = False,
     require_event_loop_samples: bool = False,
+    require_interaction_prefixes: tuple[str, ...] = (),
 ) -> dict[str, Any]:
     """Evaluate a controlled responsiveness summary against the release budget.
 
@@ -48,6 +49,22 @@ def evaluate_responsiveness_summary(
 
     if require_interactions and interaction_count == 0:
         errors.append("No interaction acknowledgement samples were recorded.")
+
+    raw_interactions = data.get("recent_interactions") or ()
+    interaction_labels = [
+        str(row.get("label") or "")
+        for row in raw_interactions
+        if isinstance(row, dict)
+    ]
+    for prefix in require_interaction_prefixes:
+        if not prefix.strip():
+            errors.append("Required interaction label prefixes cannot be empty.")
+            continue
+        if not any(label.startswith(prefix) for label in interaction_labels):
+            errors.append(
+                f"No recent interaction label starts with {prefix!r}."
+            )
+
     if interaction_count:
         if interaction_p95 > INTERACTION_P95_LIMIT_MS:
             errors.append(

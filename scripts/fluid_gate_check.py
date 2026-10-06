@@ -30,6 +30,13 @@ def main() -> int:
         action="store_true",
         help="Do not fail when interaction/event-loop samples are absent.",
     )
+    parser.add_argument(
+        "--require-interaction-prefix",
+        action="append",
+        default=[],
+        metavar="PREFIX",
+        help="Require at least one recent interaction label to start with PREFIX; may be repeated.",
+    )
     args = parser.parse_args()
 
     try:
@@ -46,10 +53,20 @@ def main() -> int:
         summary,
         require_interactions=not args.allow_empty,
         require_event_loop_samples=not args.allow_empty,
+        require_interaction_prefixes=tuple(args.require_interaction_prefix),
     )
 
     observed = result["observed"]
     print("Fluid Melodex responsiveness gate")
+    recent_interactions = summary.get("recent_interactions") or []
+    for prefix in args.require_interaction_prefix:
+        matching_count = sum(
+            1
+            for row in recent_interactions
+            if isinstance(row, dict)
+            and str(row.get("label") or "").startswith(prefix)
+        )
+        print(f"  recent {prefix!r} interaction samples: {matching_count}")
     print(
         "  acknowledgement p95: "
         f"{observed['interaction_p95_ms']:.1f} ms "

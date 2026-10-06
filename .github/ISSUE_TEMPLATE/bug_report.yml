@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping improve Melodex. Please do not include passwords, API keys, Provider Bridge tokens, or copyrighted media.
+        Thanks for helping improve Chiasm. Please do not include passwords, API keys, Provider Bridge tokens, or copyrighted media.
   - type: dropdown
     id: platform
     attributes:
@@ -23,7 +23,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Melodex version
+      label: Chiasm version
       placeholder: "e.g. v0.1.1"
     validations:
       required: true

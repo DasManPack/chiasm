@@ -1,11 +1,11 @@
 name: Beta tester feedback
-description: Tell us what felt good, confusing or missing while trying Melodex
+description: Tell us what felt good, confusing or missing while trying Chiasm
 title: "[Tester feedback]: "
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for trying Melodex. You do not need to be technical. First impressions, confusion and rough edges are extremely useful.
+        Thanks for trying Chiasm. You do not need to be technical. First impressions, confusion and rough edges are extremely useful.
 
         Please do not post passwords, API keys, tokens, private URLs or copyrighted music files.
 
@@ -26,7 +26,7 @@ body:
   - type: input
     id: version
     attributes:
-      label: Melodex version
+      label: Chiasm version
       placeholder: "e.g. v0.7.2"
     validations:
       required: true
@@ -72,13 +72,13 @@ body:
   - type: textarea
     id: missing
     attributes:
-      label: What would make you more likely to keep using Melodex?
+      label: What would make you more likely to keep using Chiasm?
       description: One missing feature or improvement is enough.
 
   - type: dropdown
     id: return
     attributes:
-      label: Would you use Melodex again in its current state?
+      label: Would you use Chiasm again in its current state?
       options:
         - Yes
         - Probably

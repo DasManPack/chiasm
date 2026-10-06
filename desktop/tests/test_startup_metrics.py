@@ -164,13 +164,69 @@ def test_local_control_bridge_is_submitted_as_background_work(
     tmp_path: Path,
 ) -> None:
     try:
+        from PySide6.QtCore import QObject, Signal
         from PySide6.QtWidgets import QApplication
         import melodex.main_window as main_window
     except ImportError as exc:
         pytest.skip(f"Qt GUI runtime is unavailable: {exc}")
 
+    class SilentFlowPlayer(QObject):
+        trackChanged = Signal(dict)
+        positionChanged = Signal(int, int)
+        playingChanged = Signal(bool)
+        queueChanged = Signal(list)
+        manualAdvanced = Signal(dict, dict, int, int)
+        error = Signal(str)
+
+        def __init__(
+            self, _resolver, _transition, parent, *, playback_refresher=None
+        ):
+            super().__init__(parent)
+            self.index = -1
+            self.queue = []
+
+        def previous(self):
+            pass
+
+        def next(self):
+            pass
+
+        def seek(self, _position_ms):
+            pass
+
+        def set_queue(self, *_args):
+            pass
+
+        def append_queue(self, *_args):
+            pass
+
+        def jump_to(self, *_args, **_kwargs):
+            pass
+
+        def replace_queue_item(self, *_args, **_kwargs):
+            pass
+
+        def status(self):
+            return {"playing": False, "queue": [], "index": -1}
+
+        def replace_queue_and_play(self, *_args, **_kwargs):
+            pass
+
+        def replace_upcoming(self, *_args, **_kwargs):
+            pass
+
+        def set_playing(self, *_args, **_kwargs):
+            pass
+
+        def play_pause(self):
+            pass
+
+        def close(self):
+            pass
+
     app = QApplication.instance() or QApplication([])
     monkeypatch.setattr(main_window, "app_data_dir", lambda: tmp_path)
+    monkeypatch.setattr(main_window, "FlowPlayer", SilentFlowPlayer)
 
     submitted = []
 

@@ -83,12 +83,15 @@ def test_lyric_flow_uses_cached_soft_artwork_background(tmp_path):
     scene.set_profile(build_visual_profile({"artist": "A", "title": "B"}))
     scene.set_artwork(str(path))
     assert not scene._artwork_source.isNull()
-    assert scene._artwork_source.width() <= 72 or scene._artwork_source.height() <= 72
+    assert max(scene._artwork_source.width(), scene._artwork_source.height()) <= 256
 
     rendered = QImage(scene.size(), QImage.Format_ARGB32)
     rendered.fill(QColor("#000000"))
     scene.render(rendered)
     assert not scene._artwork_cache.isNull()
+    assert max(scene._artwork_cache.width(), scene._artwork_cache.height()) <= (
+        scene._quality_budget().artwork_cache_px
+    )
 
     scene.deleteLater()
     app.processEvents()

@@ -67,6 +67,26 @@ class FlowPlayer(QObject):
         if autoplay and self.index >= 0:
             self._load_index(self.index, play=True)
 
+    def replace_queue_and_play(
+        self,
+        tracks: list[dict[str, Any]],
+        start: int = 0,
+        autoplay: bool = True,
+    ) -> None:
+        """Replace the route and cleanly end any in-progress two-deck fade."""
+        for player in self.players:
+            player.stop()
+        self._crossfading = False
+        self._transition_ms = 0
+        self.outputs[self.active].setVolume(1.0)
+        self.outputs[1 - self.active].setVolume(0.0)
+        self.queue = [dict(item) for item in tracks]
+        self.index = max(0, min(len(self.queue) - 1, int(start))) if self.queue else -1
+        self.queueChanged.emit(self.queue)
+        self.playingChanged.emit(False)
+        if autoplay and self.index >= 0:
+            self._load_index(self.index, play=True)
+
     def append_queue(self, tracks: list[dict[str, Any]], autoplay: bool = False) -> None:
         incoming = [dict(item) for item in tracks]
         if not incoming:
@@ -210,6 +230,24 @@ class FlowPlayer(QObject):
             else:
                 player.play()
                 self.playingChanged.emit(True)
+
+    def set_playing(self, playing: bool) -> None:
+        """Set playback state, freezing both decks when a transition is active."""
+        player = self.players[self.active]
+        if not playing:
+            for deck in self.players:
+                if deck.playbackState() == QMediaPlayer.PlayingState:
+                    deck.pause()
+            self.playingChanged.emit(False)
+            return
+
+        if player.source().isEmpty() and self.index >= 0:
+            self._load_index(self.index, True)
+            return
+        player.play()
+        if self._crossfading:
+            self.players[1 - self.active].play()
+        self.playingChanged.emit(True)
 
     def next(self) -> None:
         if self.index + 1 < len(self.queue):

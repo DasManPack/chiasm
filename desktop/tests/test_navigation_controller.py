@@ -27,6 +27,14 @@ class FakeMotion:
         self.calls.append((target, kwargs))
 
 
+class FakeChiasmFeature:
+    def __init__(self):
+        self.refreshes = 0
+
+    def refresh(self):
+        self.refreshes += 1
+
+
 class FakeHost:
     def __init__(self):
         self._closing = False
@@ -35,9 +43,11 @@ class FakeHost:
             "home": FakePage(),
             "library": FakePage(),
             "album_wall": FakePage(),
+            "chiasm": FakePage(),
         }
         self.stack = FakeStack()
         self.motion = FakeMotion()
+        self.chiasm_feature = FakeChiasmFeature()
         self.page_titles = {}
         self.nav_buttons = {}
         self.invalidated = []
@@ -95,6 +105,7 @@ def test_navigation_parent_groups_secondary_pages():
     assert navigation_parent("now_playing") == "home"
     assert navigation_parent("moments") == "library"
     assert navigation_parent("album_wall") == "explore"
+    assert navigation_parent("chiasm") == "explore"
     assert navigation_parent("sources") == "sources"
     assert navigation_parent("unknown") == ""
 
@@ -146,3 +157,18 @@ def test_stale_navigation_callback_is_dropped():
 
     assert host.invalidated == ["page:album-wall-model"]
     assert "library" not in controller.built_lazy_pages
+
+
+def test_chiasm_page_refreshes_through_navigation_controller():
+    callbacks = []
+    host = FakeHost()
+    controller = NavigationController(
+        host,
+        schedule=lambda _delay, callback: callbacks.append(callback),
+    )
+
+    assert controller.open_page("chiasm") is True
+    callbacks.pop(0)()
+
+    assert host.current_page == "chiasm"
+    assert host.chiasm_feature.refreshes == 1

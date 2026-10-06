@@ -1,54 +1,12 @@
-# Start Here
+# Start with Chiasm
 
-Melodex is a local-first music player. You can use it without an account, AI setup, or changing your music files.
+Chiasm is an experimental spatial field for exploring a music collection. It is a separate project derived from Melodex, not a Melodex release.
 
-## Install
+1. Download the [Chiasm v0.1.0 public preview](https://github.com/DasManPack/chiasm/releases/tag/v0.1.0) for your computer.
+2. Install the package for your computer and open Chiasm.
+3. If the field is empty, choose **Add folder** and select a local music folder. Your files stay where they are.
+4. Follow the indexing message in the field. When the collection appears, move through it, focus an album, and follow a link that interests you.
 
-- [macOS](INSTALL_MACOS.md)
-- [Windows](INSTALL_WINDOWS.md)
-- [Linux](INSTALL_LINUX.md)
-- [Android](INSTALL_ANDROID.md)
-- [Installation chooser](INSTALL.md)
+For Android, use the [Android workflow](https://github.com/DasManPack/chiasm/actions/workflows/android.yml). The current Android package is an early bridge companion for a Chiasm desktop host.
 
-## Add your music
-
-1. Open **My Music**.
-2. Choose **+ Add music**.
-3. Pick a folder that already contains your music.
-
-Melodex indexes files where they are. It does not move, copy, or upload them.
-
-## Play something
-
-Go to **Home** and choose **▶  Play something**.
-
-Or browse an album in **My Music** and play it directly.
-
-If you do not have a local collection, use **Explore → Search everything** to search connected sources.
-
-## Explore when you want more
-
-- **Comfort** stays close to familiar music.
-- **Explore** moves further away.
-- **Rediscover** brings neglected music back.
-- **Tune it…** lets you choose session length and how adventurous it should be.
-- **Album Wall** is a visual way to browse your collection.
-- **Music Map** shows relationships between tracks.
-- **Journeys** builds a route through music instead of shuffling.
-
-These are optional. Melodex works perfectly well as a straightforward local player.
-
-## Fix incomplete artwork or tags
-
-Open **My Music** to find missing covers or artist photos, or edit local Melodex metadata for a track.
-
-Those corrections stay inside Melodex unless you explicitly use another tool to rewrite the original audio file.
-
-## More
-
-- [Visual tour](VISUAL_TOUR.md)
-- [User guide](USER_GUIDE.md)
-- [Tinkerer's guide](TINKERERS_GUIDE.md)
-- [Music sources](SOURCES.md)
-- [FAQ](FAQ.md)
-- [Troubleshooting](TROUBLESHOOTING.md)
+See [how Chiasm works](CHIASM.md) or the [10-minute test guide](TESTING.md). This is an experimental preview; macOS packages are not notarized and Windows packages are not signed.

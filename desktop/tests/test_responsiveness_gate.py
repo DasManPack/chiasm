@@ -86,6 +86,39 @@ def test_release_gate_can_require_real_samples():
     assert len(result["errors"]) == 2
 
 
+def test_release_gate_can_require_feature_specific_interaction_evidence():
+    summary = _passing_summary()
+    summary["recent_interactions"] = [
+        {"label": "library:selection", "duration_ms": 12.0},
+        {"label": "chiasm:key", "duration_ms": 18.0},
+    ]
+
+    result = evaluate_responsiveness_summary(
+        summary,
+        require_interaction_prefixes=("chiasm:",),
+    )
+
+    assert result["passed"] is True
+    assert result["errors"] == []
+
+    summary["recent_interactions"] = [
+        {"label": "library:selection", "duration_ms": 12.0}
+    ]
+    result = evaluate_responsiveness_summary(
+        summary,
+        require_interaction_prefixes=("chiasm:",),
+    )
+    assert result["passed"] is False
+    assert any("chiasm:" in row for row in result["errors"])
+
+    result = evaluate_responsiveness_summary(
+        summary,
+        require_interaction_prefixes=("",),
+    )
+    assert result["passed"] is False
+    assert any("prefixes cannot be empty" in row for row in result["errors"])
+
+
 def test_extracts_summary_from_full_diagnostics_payload():
     summary = _passing_summary()
     payload = {

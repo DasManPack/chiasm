@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QEvent, Qt, QTimer, Signal, Slot, QObject
-from PySide6.QtGui import QAction, QColor, QDesktopServices, QKeySequence, QPixmap, QShortcut
+from PySide6.QtGui import QColor, QDesktopServices, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QListWidget,
     QListWidgetItem, QStackedWidget, QLineEdit, QComboBox, QFileDialog, QMessageBox,
@@ -30,6 +30,7 @@ from .library_scan_controller import LibraryScanController
 from .navigation_controller import NavigationController
 from .source_policy_controller import SourcePolicyController
 from .sources_feature import SourcesFeature
+from .chiasm_feature import choose_music_folder, create_chiasm_feature
 from .library_scan_status import (
     idle_scan_session,
     scan_activity_state,
@@ -147,7 +148,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self._startup_timeline = startup_timeline
         self._startup_mark("main_window_init_enter")
-        self.setWindowTitle("Melodex")
+        self.setWindowTitle("Chiasm")
         self.resize(1280, 800)
         self.data_dir = app_data_dir()
         self.providers = ProviderManager(
@@ -253,7 +254,6 @@ class MainWindow(QMainWindow):
             lambda message: self.statusBar().showMessage(message, 7000)
         )
         self.playback_feature.previousRequested.connect(self.player.previous)
-        self.playback_feature.playPauseRequested.connect(self.player.play_pause)
         self.playback_feature.nextRequested.connect(self.player.next)
         self.playback_feature.seekRequested.connect(self.player.seek)
         self.playback_feature.setQueueRequested.connect(
@@ -285,9 +285,9 @@ class MainWindow(QMainWindow):
         )
         self._startup_mark("player_ready")
 
+        self.responsiveness = UiResponsivenessMonitor(self)
         self._build_ui()
         self._startup_mark("ui_built")
-        self.responsiveness = UiResponsivenessMonitor(self)
         self.responsiveness.start()
         self.responsiveness.mark_action("startup:home")
         self._show_home()
@@ -351,7 +351,7 @@ class MainWindow(QMainWindow):
         brand = QHBoxLayout()
         brand.setSpacing(10)
         mark = QLabel()
-        mark_path = Path(__file__).resolve().parent / "assets" / "melodex-mark.png"
+        mark_path = Path(__file__).resolve().parent / "assets" / "chiasm-mark.png"
         pixmap = QPixmap(str(mark_path))
         if not pixmap.isNull():
             mark.setPixmap(
@@ -360,9 +360,9 @@ class MainWindow(QMainWindow):
         mark.setFixedSize(44, 44)
         titles = QVBoxLayout()
         titles.setSpacing(0)
-        logo = QLabel("MELODEX")
+        logo = QLabel("CHIASM")
         logo.setObjectName("brandName")
-        tagline = QLabel("Don't shuffle. Flow.")
+        tagline = QLabel("Explore your music.")
         tagline.setObjectName("brandTagline")
         titles.addWidget(logo)
         titles.addWidget(tagline)
@@ -445,6 +445,7 @@ class MainWindow(QMainWindow):
             lambda message, timeout: self.statusBar().showMessage(message, timeout)
         )
         self.player.manualAdvanced.connect(self.journey_workspace.on_manual_advance)
+        self.chiasm_feature = create_chiasm_feature(self)
         for name in [
             "home",
             "library",
@@ -484,11 +485,7 @@ class MainWindow(QMainWindow):
         self.sources_feature.bridgeRequested.connect(self._bridge_dialog)
         self.sources_feature.pluginPresenceChanged.connect(self._refresh_plugin_presence)
         self.sources_feature.sourceCatalogChanged.connect(self._refresh_source_combo)
-        self.sources_feature.actionMarked.connect(
-            lambda action: self.responsiveness.mark_action(action)
-            if hasattr(self, "responsiveness")
-            else None
-        )
+        self.sources_feature.actionMarked.connect(self.responsiveness.mark_action)
         self.sources_feature.statusMessageRequested.connect(
             lambda message, timeout: self.statusBar().showMessage(message, timeout)
         )
@@ -506,6 +503,7 @@ class MainWindow(QMainWindow):
                 "library": self._build_library,
                 "now_playing": self.playback_feature.build_now_playing,
                 "album_wall": self._build_album_wall,
+                "chiasm": self.chiasm_feature.build,
                 "music_map": self.journey_workspace.build_music_map,
             }
         )
@@ -1524,6 +1522,7 @@ class MainWindow(QMainWindow):
         cards.addWidget(search_card,1)
         cards.addWidget(self.explore_wall_card,1)
         cards.addWidget(self.explore_map_card,1)
+        cards.addWidget(self.chiasm_feature.explore_card(self.open_page),1)
         l.addLayout(cards)
 
         self.explore_try_section=QWidget()
@@ -1884,6 +1883,7 @@ class MainWindow(QMainWindow):
             ("Explore","Search, Album Wall and Music Map.",lambda:self.open_page("explore")),
             ("Search everything","Search all connected music sources.",lambda:self.open_page("discover")),
             ("Album Wall","Browse your collection spatially.",lambda:self.open_page("album_wall")),
+            ("Chiasm","Listen from the spatial field.",lambda:self.open_page("chiasm")),
             ("Music Map","Explore track relationships and routes.",lambda:self.open_page("music_map")),
             ("Now Playing","Open artwork, lyrics and visuals.",lambda:self.open_page("now_playing")),
             ("Journeys","Open saved listening journeys.",lambda:self.open_page("journeys")),
@@ -2566,18 +2566,7 @@ class MainWindow(QMainWindow):
 
     # ------------------------------- sources/search
     def _choose_music_folder(self):
-        folder=QFileDialog.getExistingDirectory(self,"Choose a music folder")
-        if not folder:
-            return
-        roots=self.providers.local_roots()
-        p=Path(folder)
-        if p not in roots:
-            roots.append(p)
-        self.providers.configure_local_roots(roots)
-        came_from_home = self.current_page == "home"
-        self._start_local_scan("folder added")
-        if came_from_home:
-            self.open_page("library")
+        choose_music_folder(self)
 
     def _rescan(self):
         self._start_local_scan("rescan")
@@ -2629,6 +2618,7 @@ class MainWindow(QMainWindow):
         message=scan_progress_message(payload)
         if message:
             self.statusBar().showMessage(message)
+            self.chiasm_feature._status(message, 0)
             if hasattr(self,"home_status"):
                 self.home_status.setText(message)
 
@@ -2668,6 +2658,7 @@ class MainWindow(QMainWindow):
         )
 
     def _start_local_scan(self, reason: str = "scan") -> None:
+        self.chiasm_feature._status("Indexing collection…", 0)
         roots=self.providers.local_roots()
         if not roots:
             self.statusBar().showMessage("Add a music folder first",3000)
@@ -2737,6 +2728,7 @@ class MainWindow(QMainWindow):
             if hasattr(self,"library_browser"):
                 self.library_browser.finish_scan("cancelled")
                 QTimer.singleShot(3500,self.library_browser.clear_scan_status)
+                self.chiasm_feature._status("Indexing cancelled", 4000)
             self._show_home()
             if bool(result.get("hard_cancelled")):
                 self.statusBar().showMessage(
@@ -2791,6 +2783,8 @@ class MainWindow(QMainWindow):
         )
         self._refresh_library()
         self._show_home()
+        if self.current_page == "chiasm":
+            self.chiasm_feature.refresh()
         storage_message=scan_storage_message(outcome)
         if hasattr(self,"library_browser"):
             self.library_browser.finish_scan(
@@ -2806,10 +2800,12 @@ class MainWindow(QMainWindow):
         if outcome["degraded"]:
             message=f"NAS/library warning · {storage_message}"
             self.statusBar().showMessage(message,12000)
+            self.chiasm_feature._status(message, 12000)
             if hasattr(self,"home_status"):
                 self.home_status.setText(storage_message)
         else:
             suffix=scan_change_suffix(changes)
+            self.chiasm_feature._status("Collection updated", 3500)
             self.statusBar().showMessage(
                 f"Music indexing complete · {count:,} tracks{suffix}",
                 6500,
@@ -2840,6 +2836,7 @@ class MainWindow(QMainWindow):
         )
         if hasattr(self,"library_browser"):
             self.library_browser.finish_scan("error",error=error_type)
+        self.chiasm_feature._status(f"Indexing failed · {error_type}", 6000)
         self._show_home()
         message=(
             "Music indexing stopped — your existing library was kept. "

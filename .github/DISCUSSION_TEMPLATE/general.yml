@@ -3,7 +3,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this space for open-ended Melodex conversation: listening experiences, questions, comparisons, workflows, UX observations and community ideas.
+        Use this space for open-ended Chiasm conversation: listening experiences, questions, comparisons, workflows, UX observations and community ideas.
 
         If something is clearly broken, please use the Bug report issue form so it can be tracked.
 

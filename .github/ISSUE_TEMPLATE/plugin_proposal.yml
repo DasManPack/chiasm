@@ -1,5 +1,5 @@
 name: Plugin / provider proposal
-description: Propose a new Melodex provider or capability extension
+description: Propose a new Chiasm provider or capability extension
 title: "[Plugin]: "
 labels: ["ecosystem"]
 body:
@@ -34,7 +34,7 @@ body:
   - type: textarea
     id: value
     attributes:
-      label: What would this add to Melodex?
+      label: What would this add to Chiasm?
       description: Keep this focused on one useful capability where possible.
     validations:
       required: true

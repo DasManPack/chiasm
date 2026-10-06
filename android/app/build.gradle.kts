@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    namespace = "com.melodex.app"
+    namespace = "com.chiasm.app"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.melodex.app"
+        applicationId = "com.chiasm.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 713
-        versionName = "0.7.13"
+        versionCode = 100
+        versionName = "0.1.0"
     }
 
     buildFeatures { compose = true }

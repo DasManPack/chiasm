@@ -1,6 +1,6 @@
 # Code of Conduct
 
-Melodex should be a project where people can ask questions, contribute small pieces, disagree about design and learn in public without being treated dismissively.
+Chiasm should be a project where people can ask questions, contribute small pieces, disagree about design and learn in public without being treated dismissively.
 
 ## Expected behaviour
 

@@ -1,86 +1,66 @@
 <p align="center">
-  <img src="docs/images/melodex.jpg" width="100%" alt="Melodex — Don't shuffle. Flow. Find a listening path through your own music.">
+  <img src="docs/images/chiasm-mark.svg" width="112" alt="Chiasm mark: connected paths through a collection">
 </p>
+
+<p align="center"><strong>Explore your music, spatially.</strong></p>
+
+<p align="center"><a href="docs/README.md">Docs</a> · <a href="docs/FIRST_CONTRIBUTION.md">Contribute</a> · <a href="SUPPORT.md">Support</a></p>
 
 <p align="center">
-  <strong>Find your next listen in the music you already love.</strong>
+  <a href="https://github.com/DasManPack/chiasm/releases/tag/v0.1.0"><strong>Download Chiasm v0.1.0</strong></a> ·
+  <a href="docs/CHIASM.md">How Chiasm works</a> ·
+  <a href="docs/TESTING.md">Test Chiasm</a> ·
+  <a href="docs/CHIASM_CAMPAIGN.md">Development notes</a>
 </p>
 
-<p align="center">
-  <a href="https://github.com/Cliff-Lee/melodex/releases/latest"><strong>Download Melodex</strong></a> ·
-  <a href="docs/START_HERE.md">Get started</a> ·
-  <a href="docs/WHY_MELODEX.md">Why Melodex?</a> ·
-  <a href="docs/FAQ.md">FAQ</a> ·
-  <a href="docs/README.md">Docs</a> ·
-  <a href="docs/TESTING.md">Help test the beta</a>
-</p>
+# Chiasm
 
-# Melodex
+Chiasm is an experimental project about exploring a music collection as a place. Albums become landmarks in a navigable visual field. You move through the collection, focus on an album, and follow relationships when you choose. Detail appears with attention; most of the time, the collection itself is the interface.
 
-## Don't shuffle. Flow.
+The aim is **music exploration with very little permanent text**: less managing lists and screens, more noticing where you might go next.
 
-Melodex is a music player that helps you find your way through your own collection. Start a listening session, keep it familiar or make it more adventurous, and rediscover albums you haven't heard in a while.
+## A separate experiment, built from Melodex
 
-It works with music files you already have. Melodex leaves those files where they are, and you can use it without an account or an AI setup.
+Chiasm is a distinct project derived from the open-source [Melodex](https://github.com/Cliff-Lee/melodex) codebase. It is not a Melodex release or a renamed copy. The experiment reuses Melodex's local library, artwork cache, and playback foundations while developing a different, spatial-first interaction model. Melodex remains a separate project.
 
-**Melodex may suit you if** you own music that has become hard to browse, keep returning to the same favourites, or want more say in where a listening session goes.
+This preview retains inherited Melodex modules internally, including pages and technical names that support compatibility. Chiasm launches directly into its spatial field; those inherited pages, menus, and shortcuts are removed from the visible Chiasm experience. The public identity, launcher, app window, and test packages are Chiasm.
 
-## What listening with Melodex feels like
+## Try the public preview
 
-- **Press Play something.** Start a session from your collection without first choosing every track.
-- **Set the direction.** Choose Comfort, Explore, or Rediscover, then tune how familiar or surprising the session should feel.
-- **Wander through your music.** Browse album artwork, explore a visual map, or build a journey from one part of your collection to another.
-- **Keep what you like.** Use Keep and ♥ to help Melodex remember what you enjoy.
-- **Use AI only if you want to.** Melodex works without any AI setup.
+Download [Chiasm v0.1.0](https://github.com/DasManPack/chiasm/releases/tag/v0.1.0) for macOS, Windows, Linux, or Android. On macOS, open the DMG and move Chiasm to Applications; on Windows, run the installer or portable app. For Ubuntu or Debian, use the `.deb`; other compatible x86_64 Linux systems can use the AppImage. The Android app is an early bridge companion for a desktop host.
 
-For more detail on the listening experience, see [Why Melodex?](docs/WHY_MELODEX.md).
+This is an experimental public preview, not a stable release. The macOS builds are not notarized and Windows builds are not code signed. First-use, accessibility, real-library playback, and human discovery-loop checks remain in progress. Your audio files stay where they are.
 
-## Get started
+Platform notes: [Linux](docs/INSTALL_LINUX.md) · [macOS](docs/INSTALL_MACOS.md) · [Windows](docs/INSTALL_WINDOWS.md) · [Android](docs/INSTALL_ANDROID.md).
 
-1. [Download the latest release](https://github.com/Cliff-Lee/melodex/releases/latest) for your device.
-2. Open **My Music → + Add music** and choose a folder that contains your music.
-3. Go to **Home** and choose **Play something**.
+### Android companion
 
-You don't need Python, Git, a server, or an AI model to install a release build. Melodex indexes and plays your files where they are; it does not move or copy your music.
+The [Android workflow](https://github.com/DasManPack/chiasm/actions/workflows/android.yml) produces `Chiasm-Android.apk` and `Chiasm-Android.aab`. The app now has Chiasm's name, icon, and separate Android package identity. Its current Android experience is still an early bridge companion that connects to a Chiasm desktop host; the spatial collection field is currently desktop-focused.
 
-| Platform | Install guide |
-| --- | --- |
-| macOS | [Install on macOS](docs/INSTALL_MACOS.md) |
-| Windows | [Install on Windows](docs/INSTALL_WINDOWS.md) |
-| Linux | [Install on Linux](docs/INSTALL_LINUX.md) |
-| Android | [Android setup](docs/INSTALL_ANDROID.md) — currently pairs with a Melodex Bridge on a computer or home server |
+## Run the isolated field prototype
 
-Melodex does not include a subscription music catalogue. A local collection is the best way to use its listening and discovery features; supported connected sources are also available. See [the FAQ](docs/FAQ.md) for details.
+The repository also contains a small standalone field demo with fictional albums and mock playback:
 
-## Try the beta
+```bash
+cd desktop
+python -m chiasm.run
+```
 
-Melodex is still in public beta, and we're looking for everyday listeners. You don't need a huge collection or special expertise. The macOS build has had the most hands-on testing so far; Windows and Linux users are especially useful testers. Tell us what was easy, what confused you, whether anything failed, and whether Melodex gave you a reason to keep listening with it.
+For the integrated test app, see [build and test instructions](docs/CHIASM.md).
 
-**[Follow the 10-minute tester guide](docs/TESTING.md)** · [Send beta feedback](https://github.com/Cliff-Lee/melodex/issues/new?template=tester_feedback.yml) · [Report a problem](https://github.com/Cliff-Lee/melodex/issues/new?template=bug_report.yml)
+## Project principles
 
-## Help and community
+- The collection is the interface.
+- Keep the field calm and legible; motion follows user intent.
+- Reveal labels and controls when they help with a decision.
+- Show why a relationship exists; screen distance alone is not evidence.
+- Keep local music local and make optional services clear.
+- Prefer responsiveness and spatial memory over visual effects.
 
-- [Start Here](docs/START_HERE.md) — install and play your first music.
-- [FAQ](docs/FAQ.md) — accounts, AI, music sources, and privacy.
-- [Troubleshooting](docs/TROUBLESHOOTING.md) — get help when something goes wrong.
-- [Discussions](https://github.com/Cliff-Lee/melodex/discussions) — ask a question or share an idea.
-- [Request a feature](https://github.com/Cliff-Lee/melodex/issues/new?template=feature_request.yml).
+## Lineage and licence
 
-<details>
-<summary><strong>For developers and contributors</strong></summary>
+Chiasm's original spatial field work is combined with software derived from Melodex. The inherited code and third-party components retain their existing notices and licences; see [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Chiasm-specific contributions are distributed under the MIT licence as well.
 
-You can use Melodex without building it or knowing how it works internally. If you want to contribute, create an integration, or inspect the technical design, these are the right starting points:
+## Contributing
 
-- [Developer Gateway](docs/DEVELOPERS.md) — choose an app, provider, plugin, or API path.
-- [5-minute developer quickstart](docs/DEVELOPER_QUICKSTART.md) — fastest route to a working extension/integration setup.
-- [Status, stability and trust](docs/developers/00_STATUS_AND_STABILITY.md) — current maturity and compatibility expectations.
-- [Ecosystem architecture](docs/developers/01_ECOSYSTEM_ARCHITECTURE.md) — how providers, plugins and external control fit together.
-- [Build from source](docs/BUILD_FROM_SOURCE.md) — development environment and build instructions.
-- [First contribution](docs/FIRST_CONTRIBUTION.md) — make a change to the project.
-- [Provider SDK](provider-sdk/README.md) — create a music-source provider.
-- [API documentation](docs/api/README.md) — REST, OpenAPI, MCP, and AI integrations.
-- [Full documentation index](docs/ALL_DOCUMENTATION.md) — user and technical references.
-- [Source and rights policy](docs/developers/11_SOURCE_AND_RIGHTS_POLICY.md) — requirements for external sources and extensions.
-
-Melodex is open source under the [MIT licence](LICENSE). Music and media accessed through connected sources remain subject to those sources' terms and rights.
-</details>
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup, the [developer quickstart](docs/DEVELOPER_QUICKSTART.md), [project status and stability](docs/developers/00_STATUS_AND_STABILITY.md), and the [ecosystem architecture](docs/developers/01_ECOSYSTEM_ARCHITECTURE.md). Please frame product ideas around spatial music exploration and explain how they fit the principle: **will this still make sense as a lens inside the collection?**

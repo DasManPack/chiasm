@@ -78,6 +78,7 @@ class RichNowPlayingWidget(QWidget):
         self.bundle: dict[str, Any] = {}
         self._lyric_index = -2
         self._lyrics_document = LyricsDocument.empty()
+        self._current_lyrics: dict[str, Any] = {}
         self._local_lyrics: dict[str, Any] = {}
         self._online_lyrics: dict[str, Any] = {}
         self._active_lyrics_source = ""
@@ -327,6 +328,7 @@ class RichNowPlayingWidget(QWidget):
         self.bundle = {}
         self._lyric_index = -2
         self._lyrics_document = LyricsDocument.empty()
+        self._current_lyrics: dict[str, Any] = {}
         self._local_lyrics = {}
         self._online_lyrics = {}
         self._active_lyrics_source = ""
@@ -638,6 +640,7 @@ class RichNowPlayingWidget(QWidget):
         self._refresh_info()
 
     def _apply_lyrics(self, lyrics: dict[str, Any]) -> None:
+        self._current_lyrics = dict(lyrics)
         self._lyrics_document = build_lyrics_document(lyrics)
         document = self._lyrics_document
         lyric_text = document.text

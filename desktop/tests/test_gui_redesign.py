@@ -240,7 +240,9 @@ def test_large_library_progressively_renders_widgets():
 def test_redesigned_main_window_builds_with_goal_navigation(monkeypatch, tmp_path):
     try:
         from PySide6.QtTest import QTest
-        from PySide6.QtWidgets import QApplication, QLabel
+        from PySide6.QtGui import QAction
+        from PySide6.QtWidgets import QApplication, QLabel, QPushButton
+        from melodex.chiasm_feature import enter_chiasm_mode
         import melodex.main_window as main_window
     except ImportError as exc:
         import pytest
@@ -324,6 +326,15 @@ def test_redesigned_main_window_builds_with_goal_navigation(monkeypatch, tmp_pat
     app.processEvents()
     assert not window.sources_feature.source_power_panel.isVisible()
     assert not window.playback_feature.player_power_actions.isVisible()
+
+    enter_chiasm_mode(window)
+    app.processEvents()
+    assert window.centralWidget() is window.chiasm_feature.page
+    assert not window._inherited_shell_widget.isVisible()
+    assert window.menuBar().isHidden()
+    assert all(not action.isEnabled() for action in window.findChildren(QAction))
+    assert window.findChild(QPushButton, "chiasmAddFolder") is not None
+    assert window.chiasm_feature.chiasm_canvas is not None
 
     window.close()
     app.processEvents()
@@ -1108,19 +1119,22 @@ def test_fullscreen_lyrics_tracks_synced_position(monkeypatch, tmp_path):
     widget._active_lyrics_source = "local"
     widget._apply_lyrics(lyrics)
 
+    canvas = window.playback_feature.living_canvas
     widget._show_fullscreen_lyrics()
     app.processEvents()
-    assert widget._lyrics_fullscreen_dialog is not None
-    assert widget._lyrics_fullscreen_browser is not None
-    assert "One" in widget._lyrics_fullscreen_browser.toPlainText()
+    assert canvas._lyric_flow_dialog is not None
+    assert canvas._lyric_flow_scene is not None
 
-    widget.set_position(4100)
+    window.playback_feature.on_position(1500, 5000)
+    app.processEvents()
+    assert canvas._lyric_flow_scene._lyrics.current == "One"
+
+    window.playback_feature.on_position(4100, 5000)
     app.processEvents()
     assert widget._lyric_index == 1
-    assert "Two" in widget._lyrics_fullscreen_browser.toPlainText()
-    assert "font-size:38px" in widget._synced_lyrics_html(1, full_screen=True)
+    assert canvas._lyric_flow_scene._lyrics.current == "Two"
 
-    dialog = widget._lyrics_fullscreen_dialog
+    dialog = canvas._lyric_flow_dialog
     if dialog is not None:
         dialog.close()
     window.close()
@@ -1580,8 +1594,8 @@ def test_plain_lyrics_html_uses_explicit_dark_theme_contrast():
         pytest.skip(f"Desktop runtime is unavailable: {exc}")
 
     rendered = RichNowPlayingWidget._plain_lyrics_html("Line one\nLine two")
-    assert "color:#e5edf6" in rendered
-    assert "font-size:21px" in rendered
+    assert "color:#edf3fa" in rendered
+    assert "font-size:24px" in rendered
     assert "Line one<br>Line two" in rendered
 
 

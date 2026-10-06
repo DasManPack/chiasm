@@ -79,15 +79,15 @@ for workflow in ("desktop.yml", "linux.yml", "android.yml"):
         errors.append(f"{workflow} does not verify application version")
 
 test_workflow = (ROOT / ".github" / "workflows" / "test.yml").read_text("utf-8")
-if "Fluid Melodex release gates" not in test_workflow:
-    errors.append("test.yml is missing the dedicated Fluid Melodex release-gate job")
+if "Fluid Chiasm release gates" not in test_workflow:
+    errors.append("test.yml is missing the dedicated Chiasm release-gate job")
 if "python scripts/fluid_ci_gate.py" not in test_workflow:
     errors.append("test.yml does not execute scripts/fluid_ci_gate.py")
 
 release_workflow = (ROOT / ".github" / "workflows" / "release.yml").read_text("utf-8")
 if release_workflow.count("python scripts/fluid_ci_gate.py") < 2:
     errors.append(
-        "release.yml must run Fluid Melodex gates for both normal and manual-tag releases"
+        "release.yml must run the Chiasm responsiveness gates for both release paths"
     )
 
 bundled = ROOT / "desktop" / "melodex" / "bundled_providers"
@@ -122,5 +122,5 @@ if errors:
 
 print(
     "Release readiness check passed "
-    f"for Melodex {version}: desktop, Linux, Android, docs and bundled providers."
+    f"for Chiasm {version}: desktop, Linux, Android, docs and inherited bundled providers."
 )

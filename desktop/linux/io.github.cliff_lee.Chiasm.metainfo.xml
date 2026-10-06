@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.cliff_lee.Chiasm</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Chiasm</name>
+  <summary>Explore your music collection spatially</summary>
+  <description>
+    <p>Chiasm is an experimental spatial-first music exploration project derived from Melodex.</p>
+    <p>It presents albums in a navigable field and reveals detail as you focus on the collection.</p>
+  </description>
+  <developer id="io.github.cliff_lee">
+    <name>Cliff Lee</name>
+  </developer>
+  <url type="homepage">https://github.com/DasManPack/chiasm</url>
+  <url type="bugtracker">https://github.com/DasManPack/chiasm/issues</url>
+  <launchable type="desktop-id">io.github.cliff_lee.Chiasm.desktop</launchable>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Player</category>
+  </categories>
+  <icon type="stock">io.github.cliff_lee.Chiasm</icon>
+</component>

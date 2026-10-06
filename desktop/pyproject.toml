@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "melodex-desktop"
-version = "0.7.13"
+version = "0.1.0"
 description = "Melodex — source-neutral music player with Flow and optional LLM control"
 requires-python = ">=3.11"
 dependencies = ["PySide6>=6.7,<7", "numpy>=2.0", "mutagen>=1.47", "requests>=2.31", "keyring>=25,<26"]
@@ -19,7 +19,7 @@ melodex-mcp = "melodex.mcp_server:main"
 melodex-openai-tools = "melodex.openai_tools:main"
 
 [tool.setuptools]
-packages = ["melodex", "melodex.providers"]
+packages = ["melodex", "melodex.providers", "chiasm"]
 
 [tool.setuptools.package-data]
 melodex = ["bundled_providers/*.mdxprovider", "assets/*.png"]

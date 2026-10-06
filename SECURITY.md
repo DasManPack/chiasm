@@ -1,5 +1,7 @@
 # Security
 
+Chiasm reuses Melodex-derived provider and package systems. Some internal modules still use the `melodex` namespace; that code remains subject to these notes.
+
 Please report security issues privately rather than opening a public issue containing exploit details.
 
 ## Third-party plugin trust

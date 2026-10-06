@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Chiasm</title>
+  <desc id="desc">A focused point linked to four places in a music field.</desc>
+  <defs>
+    <linearGradient id="path" x1="38" y1="42" x2="220" y2="224" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#71e2dc"/>
+      <stop offset=".53" stop-color="#a6c8ff"/>
+      <stop offset="1" stop-color="#c0a4ff"/>
+    </linearGradient>
+    <radialGradient id="glow">
+      <stop stop-color="#71e2dc" stop-opacity=".19"/>
+      <stop offset="1" stop-color="#71e2dc" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="256" height="256" rx="58" fill="#0b1220"/>
+  <circle cx="128" cy="128" r="91" fill="url(#glow)"/>
+  <g fill="none" stroke="url(#path)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M59 66C89 68 99 96 128 128s41 58 72 62" stroke-width="8"/>
+    <path d="M197 62c-32 5-43 33-69 66s-39 59-69 64" stroke-width="8" opacity=".82"/>
+    <path d="M59 66 42 52m17 14-2 23m138-27 17-13m-17 13 3 23M59 194l-17 13m17-13-2-23m143 19 17 14m-17-14 3-23" stroke-width="5" opacity=".65"/>
+  </g>
+  <g fill="#0b1220" stroke="#e9f3ff" stroke-width="5">
+    <circle cx="59" cy="66" r="10"/>
+    <circle cx="197" cy="62" r="10"/>
+    <circle cx="59" cy="194" r="10"/>
+    <circle cx="200" cy="190" r="10"/>
+  </g>
+  <circle cx="128" cy="128" r="16" fill="#0b1220" stroke="#f4fbff" stroke-width="6"/>
+  <circle cx="128" cy="128" r="6" fill="#71e2dc"/>
+</svg>

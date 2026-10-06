@@ -25,4 +25,4 @@ body:
     id: value
     attributes:
       label: Who would this help?
-      description: What kind of Melodex user would benefit, and how?
+      description: What kind of Chiasm user would benefit, and how?

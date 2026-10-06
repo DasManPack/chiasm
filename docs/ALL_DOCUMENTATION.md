@@ -2,6 +2,8 @@
 
 This page is intentionally exhaustive. For a shorter route by goal, use the [documentation home](README.md).
 
+> Most of this inherited reference library documents Melodex-derived host systems, provider contracts, and compatibility details. For Chiasm's product intent and current test instructions, start with the [Chiasm README](../README.md), [Chiasm overview](CHIASM.md), and [testing guide](TESTING.md). Chiasm is a separate spatial-first experiment; its deeper inherited internals retain Melodex names where those names describe the source code or protocols.
+
 
 ## Start here
 

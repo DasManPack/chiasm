@@ -240,6 +240,7 @@ def test_large_library_progressively_renders_widgets():
 def test_redesigned_main_window_builds_with_goal_navigation(monkeypatch, tmp_path):
     try:
         from PySide6.QtTest import QTest
+        from PySide6.QtGui import QAction
         from PySide6.QtWidgets import QApplication, QLabel, QPushButton
         import melodex.main_window as main_window
     except ImportError as exc:
@@ -330,7 +331,7 @@ def test_redesigned_main_window_builds_with_goal_navigation(monkeypatch, tmp_pat
     assert window.centralWidget() is window.chiasm_feature.page
     assert not window._inherited_shell_widget.isVisible()
     assert window.menuBar().isHidden()
-    assert all(not action.isEnabled() for action in window.findChildren(main_window.QAction))
+    assert all(not action.isEnabled() for action in window.findChildren(QAction))
     assert window.findChild(QPushButton, "chiasmAddFolder") is not None
     assert window.chiasm_feature.chiasm_canvas is not None
 

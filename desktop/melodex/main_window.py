@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from PySide6.QtCore import QEvent, Qt, QTimer, Signal, Slot, QObject
-from PySide6.QtGui import QColor, QDesktopServices, QKeySequence, QPixmap
+from PySide6.QtGui import QColor, QDesktopServices, QKeySequence, QPixmap, QShortcut
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QListWidget,
     QListWidgetItem, QStackedWidget, QLineEdit, QComboBox, QFileDialog, QMessageBox,
@@ -30,7 +30,7 @@ from .library_scan_controller import LibraryScanController
 from .navigation_controller import NavigationController
 from .source_policy_controller import SourcePolicyController
 from .sources_feature import SourcesFeature
-from .chiasm_feature import create_chiasm_feature
+from .chiasm_feature import choose_music_folder, create_chiasm_feature
 from .library_scan_status import (
     idle_scan_session,
     scan_activity_state,

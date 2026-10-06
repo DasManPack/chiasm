@@ -19,7 +19,7 @@ jobs:
       - name: Install Qt Multimedia system dependency
         run: |
           sudo apt-get update
-          sudo apt-get install -y libpulse0t64
+          sudo apt-get install -y libpulse0
       - run: pip install pytest numpy mutagen requests PySide6
       - run: python -m compileall -q desktop/melodex provider-sdk/examples/ecosystem
       - name: Desktop tests
@@ -373,4 +373,3 @@ jobs:
         with:
           name: nas-fault-qualification
           path: nas-fault-qualification.json
-

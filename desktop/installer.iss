@@ -1,5 +1,5 @@
 #define MyAppName "Chiasm"
-#define MyAppVersion "0.1.1"
+#define MyAppVersion "0.1.2"
 #define MyAppPublisher "Chiasm contributors"
 #define MyAppExeName "Chiasm.exe"
 

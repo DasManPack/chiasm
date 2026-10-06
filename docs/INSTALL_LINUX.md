@@ -1,10 +1,10 @@
 # Install Chiasm on Linux
 
-Chiasm v0.1.1 is an experimental public preview. Linux packages currently support 64-bit x86 systems.
+Chiasm v0.1.2 is an experimental public preview. Linux packages currently support 64-bit x86 systems.
 
 ## Download
 
-1. Open the [Chiasm v0.1.1 release](https://github.com/DasManPack/chiasm/releases/tag/v0.1.1).
+1. Open the [Chiasm v0.1.2 release](https://github.com/DasManPack/chiasm/releases/tag/v0.1.2).
 2. Download `Chiasm-linux-x86_64.deb` for Ubuntu or Debian, or `Chiasm-linux-x86_64.AppImage` for another compatible distribution.
 
 On Ubuntu or Debian, install the `.deb` from its download folder:

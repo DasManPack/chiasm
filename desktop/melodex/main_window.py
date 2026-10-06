@@ -30,6 +30,7 @@ from .library_scan_controller import LibraryScanController
 from .navigation_controller import NavigationController
 from .source_policy_controller import SourcePolicyController
 from .sources_feature import SourcesFeature
+from .chiasm_feature import create_chiasm_feature
 from .library_scan_status import (
     idle_scan_session,
     scan_activity_state,
@@ -253,7 +254,6 @@ class MainWindow(QMainWindow):
             lambda message: self.statusBar().showMessage(message, 7000)
         )
         self.playback_feature.previousRequested.connect(self.player.previous)
-        self.playback_feature.playPauseRequested.connect(self.player.play_pause)
         self.playback_feature.nextRequested.connect(self.player.next)
         self.playback_feature.seekRequested.connect(self.player.seek)
         self.playback_feature.setQueueRequested.connect(
@@ -285,9 +285,9 @@ class MainWindow(QMainWindow):
         )
         self._startup_mark("player_ready")
 
+        self.responsiveness = UiResponsivenessMonitor(self)
         self._build_ui()
         self._startup_mark("ui_built")
-        self.responsiveness = UiResponsivenessMonitor(self)
         self.responsiveness.start()
         self.responsiveness.mark_action("startup:home")
         self._show_home()
@@ -445,6 +445,7 @@ class MainWindow(QMainWindow):
             lambda message, timeout: self.statusBar().showMessage(message, timeout)
         )
         self.player.manualAdvanced.connect(self.journey_workspace.on_manual_advance)
+        self.chiasm_feature = create_chiasm_feature(self)
         for name in [
             "home",
             "library",
@@ -484,11 +485,7 @@ class MainWindow(QMainWindow):
         self.sources_feature.bridgeRequested.connect(self._bridge_dialog)
         self.sources_feature.pluginPresenceChanged.connect(self._refresh_plugin_presence)
         self.sources_feature.sourceCatalogChanged.connect(self._refresh_source_combo)
-        self.sources_feature.actionMarked.connect(
-            lambda action: self.responsiveness.mark_action(action)
-            if hasattr(self, "responsiveness")
-            else None
-        )
+        self.sources_feature.actionMarked.connect(self.responsiveness.mark_action)
         self.sources_feature.statusMessageRequested.connect(
             lambda message, timeout: self.statusBar().showMessage(message, timeout)
         )
@@ -506,6 +503,7 @@ class MainWindow(QMainWindow):
                 "library": self._build_library,
                 "now_playing": self.playback_feature.build_now_playing,
                 "album_wall": self._build_album_wall,
+                "chiasm": self.chiasm_feature.build,
                 "music_map": self.journey_workspace.build_music_map,
             }
         )
@@ -1524,6 +1522,7 @@ class MainWindow(QMainWindow):
         cards.addWidget(search_card,1)
         cards.addWidget(self.explore_wall_card,1)
         cards.addWidget(self.explore_map_card,1)
+        cards.addWidget(self.chiasm_feature.explore_card(self.open_page),1)
         l.addLayout(cards)
 
         self.explore_try_section=QWidget()
@@ -1884,6 +1883,7 @@ class MainWindow(QMainWindow):
             ("Explore","Search, Album Wall and Music Map.",lambda:self.open_page("explore")),
             ("Search everything","Search all connected music sources.",lambda:self.open_page("discover")),
             ("Album Wall","Browse your collection spatially.",lambda:self.open_page("album_wall")),
+            ("Chiasm","Listen from the spatial field.",lambda:self.open_page("chiasm")),
             ("Music Map","Explore track relationships and routes.",lambda:self.open_page("music_map")),
             ("Now Playing","Open artwork, lyrics and visuals.",lambda:self.open_page("now_playing")),
             ("Journeys","Open saved listening journeys.",lambda:self.open_page("journeys")),

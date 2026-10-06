@@ -223,6 +223,11 @@ class UiResponsivenessMonitor(QObject):
             (time.monotonic() - float(started_at)) * 1000.0,
         )
 
+    def record_interaction(self, label: str, duration_ms: float) -> dict[str, Any]:
+        """Record a completed interaction measured by an owned UI component."""
+        self.tracker.mark_action(label)
+        return self.tracker.record_interaction(label, duration_ms)
+
     def summary(self) -> dict[str, Any]:
         return self.tracker.summary()
 

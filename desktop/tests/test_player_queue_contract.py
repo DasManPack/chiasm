@@ -98,3 +98,87 @@ def test_append_queue_owns_empty_and_nonempty_cases():
     assert [row["track_id"] for row in player.queue_snapshot()] == ["a", "b"]
 
     player.close()
+
+
+def test_set_playing_freezes_both_decks_during_crossfade():
+    from PySide6.QtMultimedia import QMediaPlayer
+
+    player, _loaded = _player()
+
+    class FakeSource:
+        @staticmethod
+        def isEmpty():
+            return False
+
+    class FakeDeck:
+        def __init__(self):
+            self.state = QMediaPlayer.PlayingState
+
+        def playbackState(self):
+            return self.state
+
+        def source(self):
+            return FakeSource()
+
+        def pause(self):
+            self.state = QMediaPlayer.PausedState
+
+        def play(self):
+            self.state = QMediaPlayer.PlayingState
+
+        def stop(self):
+            self.state = QMediaPlayer.StoppedState
+
+    player.players = [FakeDeck(), FakeDeck()]
+    player.active = 0
+    player.index = 1
+    player._crossfading = True
+    changes = []
+    player.playingChanged.connect(changes.append)
+
+    player.set_playing(False)
+    assert [deck.playbackState() for deck in player.players] == [
+        QMediaPlayer.PausedState,
+        QMediaPlayer.PausedState,
+    ]
+    player.set_playing(True)
+    assert [deck.playbackState() for deck in player.players] == [
+        QMediaPlayer.PlayingState,
+        QMediaPlayer.PlayingState,
+    ]
+    assert changes == [False, True]
+    player.close()
+
+
+def test_replace_queue_and_play_stops_crossfade_before_starting_route():
+    from PySide6.QtMultimedia import QMediaPlayer
+
+    player, loaded = _player()
+
+    class FakeDeck:
+        def __init__(self):
+            self.state = QMediaPlayer.PlayingState
+            self.stops = 0
+
+        def stop(self):
+            self.stops += 1
+            self.state = QMediaPlayer.StoppedState
+
+    player.players = [FakeDeck(), FakeDeck()]
+    player.active = 1
+    player._crossfading = True
+    player._transition_ms = 5000
+
+    player.replace_queue_and_play(
+        [{"track_id": "first"}, {"track_id": "second"}],
+        start=1,
+        autoplay=True,
+    )
+
+    assert [deck.stops for deck in player.players] == [1, 1]
+    assert player._crossfading is False
+    assert player._transition_ms == 0
+    assert player.index == 1
+    assert player.queue[1]["track_id"] == "second"
+    assert loaded == [(1, True)]
+    player.close()

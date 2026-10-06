@@ -19,7 +19,7 @@ melodex-mcp = "melodex.mcp_server:main"
 melodex-openai-tools = "melodex.openai_tools:main"
 
 [tool.setuptools]
-packages = ["melodex", "melodex.providers"]
+packages = ["melodex", "melodex.providers", "chiasm"]
 
 [tool.setuptools.package-data]
 melodex = ["bundled_providers/*.mdxprovider", "assets/*.png"]

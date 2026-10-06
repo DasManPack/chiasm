@@ -13,6 +13,7 @@ _NAV_PARENT = {
     "explore": "explore",
     "discover": "explore",
     "album_wall": "explore",
+    "chiasm": "explore",
     "music_map": "explore",
     "ask": "explore",
     "journeys": "journeys",
@@ -22,6 +23,7 @@ _NAV_PARENT = {
 
 _STALE_PAGE_SCOPES = {
     "album_wall": ("page:album-wall-model",),
+    "chiasm": ("page:chiasm-field",),
     "music_map": ("page:music-map-model",),
     "now_playing": (
         "now-playing-visual-analysis",
@@ -155,6 +157,8 @@ class NavigationController:
             host._refresh_explore_visibility()
         elif name == "album_wall":
             host._refresh_album_wall()
+        elif name == "chiasm":
+            host.chiasm_feature.refresh()
         elif name == "music_map":
             host.journey_workspace.refresh_music_map()
         elif name == "sources":

@@ -23,6 +23,13 @@ jobs:
           PYTHONPATH: desktop
           QT_QPA_PLATFORM: offscreen
         run: pytest -q desktop/tests
+      - name: Build and import the desktop wheel
+        run: |
+          wheel_dir="${RUNNER_TEMP}/melodex-wheel"
+          install_dir="${RUNNER_TEMP}/melodex-wheel-install"
+          python -m pip wheel --no-deps ./desktop --wheel-dir "$wheel_dir"
+          python -m pip install --no-deps --target "$install_dir" "$wheel_dir"/melodex_desktop-*.whl
+          PYTHONPATH="$install_dir" python -c 'import chiasm.field_model, chiasm.field_view, chiasm.arc_model, chiasm.relationship_model, chiasm.melodex_adapter, chiasm.artwork, melodex.chiasm_feature'
       - run: python scripts/docs_check.py
       - run: python scripts/navigation_check.py
       - run: python scripts/terminology_check.py
@@ -151,7 +158,7 @@ jobs:
             libxkbcommon0 libxkbcommon-x11-0 libx11-6 libxext6 libxrender1
       - name: Install visual capture dependencies
         run: python -m pip install PySide6
-      - name: Render canonical visual QA set
+      - name: Render visual QA set at desktop and laptop sizes
         env:
           PYTHONPATH: desktop
           QT_QPA_PLATFORM: offscreen
@@ -159,7 +166,50 @@ jobs:
           python scripts/visual_qa_capture.py \
             --width 1440 \
             --height 900 \
-            --output visual-qa
+            --output visual-qa/1440x900
+          python scripts/visual_qa_capture.py \
+            --width 1280 \
+            --height 720 \
+            --output visual-qa/1280x720
+          python scripts/visual_qa_capture.py \
+            --width 1024 \
+            --height 640 \
+            --output visual-qa/1024x640
+      - name: Verify visual QA capture manifests
+        run: |
+          python - <<'PY'
+          import json
+          import struct
+          from pathlib import Path
+
+          viewports = (("1440x900", (1440, 900)), ("1280x720", (1280, 720)), ("1024x640", (1024, 640)))
+          required_scenes = {
+              "02-lyric-flow.png",
+              "12-chiasm-50-album-lens.png",
+              "13-chiasm-1200-album-playing-lens.png",
+              "19-lyric-flow-page.png",
+          }
+
+          for name, size in viewports:
+              folder = Path("visual-qa") / name
+              manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
+              assert tuple(manifest["size"]) == size, (name, manifest["size"])
+              assert manifest["reference_comparison"]["status"] == "pending"
+              captures = manifest["captures"]
+              files = [entry["file"] for entry in captures]
+              assert len(files) >= 19, (name, len(files))
+              assert len(files) == len(set(files)), (name, "duplicate capture filenames")
+              missing = sorted(required_scenes - set(files))
+              assert not missing, (name, "missing required scenes", missing)
+              for filename in files:
+                  image_path = folder / filename
+                  with image_path.open("rb") as image_file:
+                      header = image_file.read(24)
+                  assert header[:8] == b"\x89PNG\r\n\x1a\n", (name, filename, "invalid PNG signature")
+                  image_size = struct.unpack(">II", header[16:24])
+                  assert image_size == size, (name, filename, image_size)
+              print(f"{name}: verified {len(files)} PNG captures at {size[0]}x{size[1]}")
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:

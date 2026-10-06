@@ -180,6 +180,11 @@ the recording; only surrounding glow may reflect playback state. The legacy
 fingerprint renderer remains available internally for compatibility, but it is
 not surfaced as a primary four-minute experience.
 
+When shaping P13 components that may carry forward into Chiasm, use this design
+prompt:
+
+> Will this component still make sense when it becomes a lens inside the spatial collection?
+
 ### P13h — performance pass
 Profile representative tracks and hardware.  Bound particle count, glow layers,
 path samples and artwork work.  Animation must never compromise audio playback

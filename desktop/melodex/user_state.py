@@ -34,6 +34,16 @@ class UserState:
                 );
                 CREATE INDEX IF NOT EXISTS idx_history_played_at
                     ON listening_history(played_at DESC);
+                CREATE TABLE IF NOT EXISTS chiasm_trace (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    album_id TEXT NOT NULL,
+                    title TEXT NOT NULL DEFAULT '',
+                    artist TEXT NOT NULL DEFAULT '',
+                    activity TEXT NOT NULL DEFAULT 'explore',
+                    recorded_at REAL NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_chiasm_trace_recorded_at
+                    ON chiasm_trace(recorded_at DESC);
                 CREATE TABLE IF NOT EXISTS preferences (
                     key TEXT PRIMARY KEY,
                     value TEXT NOT NULL
@@ -640,6 +650,73 @@ class UserState:
                 "tracks": [dict(t) for t in group],
             })
         return result
+
+    def record_chiasm_trace(
+        self,
+        album_id: str,
+        *,
+        title: str = "",
+        artist: str = "",
+        activity: str = "explore",
+        limit: int = 48,
+    ) -> None:
+        """Keep a small local route through Chiasm albums, without track paths."""
+        album_id = str(album_id or "").strip()
+        if not album_id:
+            return
+        activity = str(activity or "explore").strip().lower()
+        if activity not in {"explore", "listen"}:
+            activity = "explore"
+        title = str(title or "").strip()
+        artist = str(artist or "").strip()
+        now = time.time()
+        keep = max(1, int(limit))
+        with self._lock, self._conn:
+            previous = self._conn.execute(
+                "SELECT id,album_id,activity FROM chiasm_trace "
+                "ORDER BY id DESC LIMIT 1"
+            ).fetchone()
+            if previous and str(previous["album_id"]) == album_id:
+                activities = set(str(previous["activity"] or "").split("+"))
+                activities.add(activity)
+                merged_activity = "+".join(
+                    item for item in ("explore", "listen") if item in activities
+                )
+                self._conn.execute(
+                    "UPDATE chiasm_trace SET title=?,artist=?,activity=?,recorded_at=? "
+                    "WHERE id=?",
+                    (title, artist, merged_activity, now, int(previous["id"])),
+                )
+            else:
+                self._conn.execute(
+                    "INSERT INTO chiasm_trace(album_id,title,artist,activity,recorded_at) "
+                    "VALUES(?,?,?,?,?)",
+                    (album_id, title, artist, activity, now),
+                )
+            self._conn.execute(
+                "DELETE FROM chiasm_trace WHERE id NOT IN "
+                "(SELECT id FROM chiasm_trace ORDER BY id DESC LIMIT ?)",
+                (keep,),
+            )
+
+    def recent_chiasm_trace(self, limit: int = 48) -> list[dict[str, Any]]:
+        """Return newest Chiasm album stops first; never expose playback paths."""
+        with self._lock:
+            rows = self._conn.execute(
+                "SELECT album_id,title,artist,activity,recorded_at "
+                "FROM chiasm_trace ORDER BY id DESC LIMIT ?",
+                (max(1, int(limit)),),
+            ).fetchall()
+        return [
+            {
+                "album_id": str(row["album_id"] or ""),
+                "title": str(row["title"] or ""),
+                "artist": str(row["artist"] or ""),
+                "activity": str(row["activity"] or "explore"),
+                "recorded_at": float(row["recorded_at"] or 0.0),
+            }
+            for row in rows
+        ]
 
 
     def pin(self, kind: str, pin_key: str, payload: dict[str, Any]) -> None:

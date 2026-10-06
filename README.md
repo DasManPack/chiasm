@@ -7,7 +7,7 @@
 <p align="center"><a href="docs/README.md">Docs</a> · <a href="docs/FIRST_CONTRIBUTION.md">Contribute</a> · <a href="SUPPORT.md">Support</a></p>
 
 <p align="center">
-  <a href="https://github.com/DasManPack/chiasm/releases/tag/v0.1.1"><strong>Download Chiasm v0.1.1</strong></a> ·
+  <a href="https://github.com/DasManPack/chiasm/releases/tag/v0.1.2"><strong>Download Chiasm v0.1.2</strong></a> ·
   <a href="docs/CHIASM.md">How Chiasm works</a> ·
   <a href="docs/TESTING.md">Test Chiasm</a> ·
   <a href="docs/CHIASM_CAMPAIGN.md">Development notes</a>
@@ -27,7 +27,7 @@ This preview retains inherited Melodex modules internally, including pages and t
 
 ## Try the public preview
 
-Download [Chiasm v0.1.1](https://github.com/DasManPack/chiasm/releases/tag/v0.1.1) for macOS, Windows, Linux, or Android. On macOS, open the DMG and move Chiasm to Applications; on Windows, run the installer or portable app. For Ubuntu or Debian, use the `.deb`; other compatible x86_64 Linux systems can use the AppImage. The Android app is an early bridge companion for a desktop host.
+Download [Chiasm v0.1.2](https://github.com/DasManPack/chiasm/releases/tag/v0.1.2) for macOS, Windows, Linux, or Android. On macOS, open the DMG and move Chiasm to Applications; on Windows, run the installer or portable app. For Ubuntu or Debian, use the `.deb`; other compatible x86_64 Linux systems can use the AppImage. The Android app is an early bridge companion for a desktop host.
 
 This is an experimental public preview, not a stable release. The macOS builds are not notarized and Windows builds are not code signed. First-use, accessibility, real-library playback, and human discovery-loop checks remain in progress. Your audio files stay where they are.
 

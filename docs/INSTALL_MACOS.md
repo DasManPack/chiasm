@@ -1,10 +1,10 @@
 # Install Chiasm on macOS
 
-Chiasm v0.1.1 is an experimental public preview. The macOS packages are not notarized.
+Chiasm v0.1.2 is an experimental public preview. The macOS packages are not notarized.
 
 ## Download
 
-1. Open the [Chiasm v0.1.1 release](https://github.com/DasManPack/chiasm/releases/tag/v0.1.1).
+1. Open the [Chiasm v0.1.2 release](https://github.com/DasManPack/chiasm/releases/tag/v0.1.2).
 2. Download `Chiasm-macOS-arm64.dmg` for Apple Silicon or `Chiasm-macOS-intel.dmg` for an Intel Mac.
 3. Open the downloaded DMG.
 4. Drag **Chiasm** into **Applications**, eject the disk image, then launch Chiasm.

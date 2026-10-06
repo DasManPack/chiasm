@@ -9,15 +9,15 @@ For the distinction between app, SDK, protocol and plugin versions, see [Release
 While development is in progress, `main` should normally use a development version such as:
 
 ```text
-0.1.1.dev0
+0.1.2.dev0
 ```
 
-Keep the working release summary in `docs/releases/next.md`. Before release, review it against the tested build, move it to `docs/releases/v<version>.md`, and verify the listed downloads against the artifacts CI produced. The release workflow uses that versioned file as the GitHub Release description. Chiasm v0.1.1 notes are at [`docs/releases/v0.1.1.md`](releases/v0.1.1.md).
+Keep the working release summary in `docs/releases/next.md`. Before release, review it against the tested build, move it to `docs/releases/v<version>.md`, and verify the listed downloads against the artifacts CI produced. The release workflow uses that versioned file as the GitHub Release description. Chiasm v0.1.2 notes are at [`docs/releases/v0.1.2.md`](releases/v0.1.2.md).
 
 When the next release is ready, choose its stable version and update every application-version surface with one command. For example:
 
 ```bash
-python scripts/set_version.py 0.1.1
+python scripts/set_version.py 0.1.2
 ```
 
 That updates:
@@ -40,7 +40,7 @@ python scripts/version_check.py
 For a release tag, the same check is:
 
 ```bash
-python scripts/version_check.py --release-tag v0.1.1
+python scripts/version_check.py --release-tag v0.1.2
 ```
 
 A release check fails if:
@@ -87,20 +87,20 @@ Example:
 
 ```bash
 git add .
-git commit -m "release: v0.1.1"
+git commit -m "release: v0.1.2"
 git push origin main
 ```
 
-When a strict release version such as `0.1.1` reaches `main`, the **Release** workflow:
+When a strict release version such as `0.1.2` reaches `main`, the **Release** workflow:
 
 1. runs the release checks and test suites again;
 2. verifies the release tag name against all application-version surfaces;
-3. creates or verifies the exact `v0.1.1` tag at that commit;
+3. creates or verifies the exact `v0.1.2` tag at that commit;
 4. creates the GitHub Release and uploads the source archive;
 5. dispatches desktop, Android and Linux workflows against that exact commit;
 6. attaches their assets to the same GitHub Release after package smoke checks pass.
 
-Ordinary development versions such as `0.1.1.dev0` do **not** create a release.
+Ordinary development versions such as `0.1.2.dev0` do **not** create a release.
 
 Before changing a development version to a strict release version, the release-candidate PR should have successful **Tests**, **Build desktop**, **Build Linux packages**, and **Build Android** checks. Desktop PR packaging exercises macOS arm64, macOS Intel (while the compatible runner remains available) and Windows x64; Linux packaging smoke-tests the .deb/AppImage path separately.
 
@@ -131,7 +131,7 @@ After the release, choose the next development target.
 For example:
 
 ```bash
-python scripts/set_version.py 0.1.2.dev0
+python scripts/set_version.py 0.1.3.dev0
 
 python scripts/version_check.py
 git add .

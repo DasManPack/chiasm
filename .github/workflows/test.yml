@@ -63,7 +63,7 @@ jobs:
 
 
   fluid-responsiveness:
-    name: Fluid Melodex release gates
+    name: Fluid Chiasm release gates
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -81,9 +81,9 @@ jobs:
             libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1 \
             libxcb-xfixes0 libxcb-xinerama0 libxcb-xinput0 libxcb-xkb1 \
             libxkbcommon0 libxkbcommon-x11-0 libx11-6 libxext6 libxrender1
-      - name: Install Fluid Melodex test dependencies
+      - name: Install Fluid Chiasm test dependencies
         run: python -m pip install pytest numpy mutagen requests PySide6 keyring
-      - name: Run Fluid Melodex release gates
+      - name: Run Fluid Chiasm release gates
         env:
           PYTHONPATH: desktop
           QT_QPA_PLATFORM: offscreen

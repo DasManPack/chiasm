@@ -968,7 +968,7 @@ class FieldCanvas(QWidget):
             painter.drawText(
                 QRectF(48, self.height() / 2 - 18, self.width() - 96, 36),
                 Qt.AlignCenter,
-                "Add local music in My Music to enter the field",
+                "Add a music folder to begin exploring",
             )
         painter.restore()
 
@@ -2229,6 +2229,15 @@ class FieldCanvas(QWidget):
 
     def _clear_toast(self) -> None:
         self._play_toast = ""
+        self.update()
+
+    def show_notice(self, message: str, timeout_ms: int = 4000) -> None:
+        """Show brief collection or playback feedback inside the field."""
+        self._play_toast = str(message or "")
+        if timeout_ms > 0:
+            self._toast_timer.start(int(timeout_ms))
+        else:
+            self._toast_timer.stop()
         self.update()
 
 

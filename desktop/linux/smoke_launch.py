@@ -40,7 +40,7 @@ def _stop_process_group(process: subprocess.Popen[str]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Smoke-test a packaged Melodex GUI launch.")
+    parser = argparse.ArgumentParser(description="Smoke-test a packaged Chiasm GUI launch.")
     parser.add_argument("executable", type=Path)
     parser.add_argument(
         "--appimage",
@@ -86,7 +86,7 @@ def main() -> int:
                 while time.monotonic() < deadline:
                     if first.poll() is not None:
                         raise SystemExit(
-                            f"Melodex exited before acquiring its single-instance lock "
+                            f"Chiasm exited before acquiring its inherited single-instance lock "
                             f"(exit {first.returncode}):\n{log_path.read_text('utf-8')}"
                         )
                     if lock.is_file():
@@ -94,7 +94,7 @@ def main() -> int:
                     time.sleep(0.1)
                 else:
                     raise SystemExit(
-                        f"Melodex did not create its single-instance lock:\n"
+                        f"Chiasm did not create its inherited single-instance lock:\n"
                         f"{log_path.read_text('utf-8')}"
                     )
 

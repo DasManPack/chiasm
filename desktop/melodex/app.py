@@ -34,13 +34,13 @@ def main() -> int:
     startup.mark("app_module_ready")
 
     app = QApplication(sys.argv)
-    app.setApplicationName("Melodex")
-    app.setOrganizationName("Melodex")
+    app.setApplicationName("Chiasm")
+    app.setOrganizationName("Chiasm")
     startup.mark("qapplication_ready")
 
     guard = SingleInstanceGuard(app_data_dir())
     if not guard.acquire():
-        # A live Melodex GUI already owns the lock. Avoid importing the heavy
+        # A live Chiasm GUI already owns the lock. Avoid importing the heavy
         # desktop window graph at all in this short-lived secondary process.
         startup.mark("secondary_instance_forwarded")
         trace_path = str(os.environ.get("MELODEX_STARTUP_TRACE") or "").strip()
@@ -49,7 +49,7 @@ def main() -> int:
         return 0
     startup.mark("single_instance_ready")
 
-    icon_path = Path(__file__).resolve().parent / "assets" / "melodex-mark.png"
+    icon_path = Path(__file__).resolve().parent / "assets" / "chiasm-mark.png"
     if icon_path.exists():
         app.setWindowIcon(QIcon(str(icon_path)))
     startup.mark("app_identity_ready")
@@ -62,6 +62,7 @@ def main() -> int:
 
     startup.mark("main_window_construct_start")
     win = MainWindow(startup_timeline=startup)
+    win.enter_chiasm_mode()
     startup.mark("main_window_construct_ready")
 
     guard.activationRequested.connect(lambda: _activate_window(win))

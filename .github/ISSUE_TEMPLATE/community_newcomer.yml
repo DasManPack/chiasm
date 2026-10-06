@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        New here? The [First Contribution guide](https://github.com/Cliff-Lee/melodex/blob/main/docs/FIRST_CONTRIBUTION.md) explains the smallest routes into the repository. You do not need a complete design before asking for direction.
+        New here? The [First Contribution guide](https://github.com/DasManPack/chiasm/blob/main/docs/FIRST_CONTRIBUTION.md) explains the smallest routes into the repository. You do not need a complete design before asking for direction.
   - type: dropdown
     id: interest
     attributes:

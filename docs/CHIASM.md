@@ -2,7 +2,7 @@
 
 **Move through your music.**
 
-Chiasm is an experimental spatial music experience derived from Melodex.
+Chiasm is a distinct experimental project derived from the Melodex codebase. It explores a spatial-first way to move through a music collection, with minimal persistent text. Melodex remains a separate project.
 
 ## Product idea
 
@@ -31,11 +31,9 @@ The primary experience is a calm spatial field in which the user can move, focus
 - **Horizon** — peripheral and unresolved musical possibilities.
 - **Trace** — exploration history.
 
-## First prototype
+## Spatial field demo
 
-Do not begin by rebuilding Melodex.
-
-Start with a deliberately isolated prototype:
+The isolated field demo provides a quick look at the interaction without requiring a configured collection:
 
 1. 50 album covers.
 2. Full-window spatial field.
@@ -52,7 +50,9 @@ Start with a deliberately isolated prototype:
 
 The prototype should already feel enjoyable to explore for five minutes before any additional visual or product complexity is added.
 
-The isolated implementation lives in `desktop/chiasm`; start it from `desktop` with `python -m chiasm.run`. Its first pass uses a deterministic 50-album field, pointer-centred zoom, hover glance, click focus, mocked double-click playback, Escape to release focus, and Home to return.
+The demo lives in `desktop/chiasm`; start it from `desktop` with `python -m chiasm.run`. It uses a deterministic 50-album field, pointer-centred zoom, hover glance, click focus, mocked double-click playback, Escape to release focus, and Home to return.
+
+For the integrated Chiasm desktop preview, use the workflow artifact linked from the [project README](../README.md). It launches directly into the spatial field and adapts a local music collection through the inherited Melodex library and playback foundations.
 
 ### Later expansion gate
 
@@ -72,14 +72,14 @@ order; Chiasm centers it while preserving zoom. If the album lens was open, it
 stays open as focus moves. Use `Enter` to open or close the lens, `Ctrl+Tab` /
 `Ctrl+Shift+Tab` to switch between Horizon and Trace, `PageUp` / `PageDown`
 to browse older / newer Trace stops, `1` to `3` to follow a Horizon or Trace
-entry, and `H` or `Home` to return to the starting view. In integrated Melodex,
+entry, and `H` or `Home` to return to the starting view. In the Chiasm desktop app,
 `Ctrl+Enter` starts playback from the focused album.
 
-## C4 local playback bridge
+## Local collection and playback bridge
 
-In the Melodex app, open **Explore → Chiasm** or choose Chiasm from the command palette. The page adapts the local Album Wall collection and keeps album track lists in the host. Double-click an album or press play in its attached lens to start that album through Melodex's existing `FlowPlayer`; the in-field transport, `Space`, and `N` control playback while the field stays visible. Leaving the page keeps the field mounted so the listener can return to the same view.
+The Chiasm app opens directly into the field. It adapts the local album collection and keeps album track lists behind its inherited host boundary. Double-click an album or press play in its attached lens to start it through the existing `FlowPlayer`; the in-field transport, `Space`, and `N` control playback while the field stays visible.
 
-The standalone `python -m chiasm.run` demo remains a fictional 50-album field with mock-play. Chiasm does not create a separate audio engine, and this stage does not add provider playback.
+The standalone `python -m chiasm.run` demo uses fictional albums and mock playback. Chiasm does not create a separate audio engine; it reuses the local playback foundation inherited from Melodex.
 
 ## C5 explainable Arc
 
@@ -103,14 +103,10 @@ Trace shows two stops at a time, with Earlier and Later controls for the rest of
 
 ## C8 real collection foundations
 
-The integrated field now uses a narrow adapter to Melodex's existing local catalog, Album Wall model, cached artwork service, and FlowPlayer host path. Collection and position work stays in the background. It considers up to 5,000 tracks for positions, keeps the existing 700-track Horizon evidence sample, and displays up to 1,200 albums. If Flow analysis is unavailable, the field uses stable metadata positions; if the local provider is unavailable, it clears cleanly and reports the state.
+The integrated field uses a narrow adapter to the inherited local catalog, album model, cached artwork service, and FlowPlayer path. Collection and position work stays in the background. It considers up to 5,000 tracks for positions, keeps the 700-track Horizon evidence sample, and displays up to 1,200 albums. If Flow analysis is unavailable, the field uses stable metadata positions; if the local catalog is unavailable, it clears cleanly and reports the state.
 
 Album art loads only for visible and near-visible records at album/detail zoom and for the focused album lens. Each visible-set context requests up to 24 images, decoded off the UI thread and held in a 48-image memory cache. The metadata service checks local artwork and its existing cache only; missing or unreadable art keeps the procedural cover motif. Chiasm does not start online lookups or add another artwork surface.
 
 ## Relationship to Melodex
 
-Melodex remains the stable existing application.
-
-Chiasm should initially reuse proven Melodex library, playback, caching and provider foundations while experimenting with a radically different interaction model.
-
-No production Melodex behavior should be changed merely to satisfy the Chiasm prototype.
+Chiasm is a separate project derived from Melodex. It reuses selected local-library, artwork, provider, and playback foundations so the experiment can focus on the collection as a spatial interface. The app opens on Chiasm; inherited technical modules and their namespaces are retained where renaming them would add risk without improving the experience. Chiasm-specific changes should serve spatial exploration and keep the interface quiet. The Melodex project and its release channel remain separate.

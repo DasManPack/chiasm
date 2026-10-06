@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Chiasm
+Comment=Explore your music spatially
+Exec=chiasm
+TryExec=chiasm
+Icon=io.github.cliff_lee.Chiasm
+Terminal=false
+StartupNotify=true
+StartupWMClass=Chiasm
+Categories=AudioVideo;Player;Audio;
+Keywords=music;audio;collection;explore;spatial;

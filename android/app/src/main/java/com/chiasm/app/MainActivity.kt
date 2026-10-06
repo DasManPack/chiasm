@@ -1,4 +1,4 @@
-package com.melodex.app
+package com.chiasm.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -84,25 +84,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val player = ExoPlayer.Builder(this).build()
-        setContent { MelodexApp(player) }
+        setContent { ChiasmApp(player) }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MelodexApp(player: ExoPlayer) {
+fun ChiasmApp(player: ExoPlayer) {
     var bridgeUrl by remember { mutableStateOf("http://192.168.1.2:8766") }
     var token by remember { mutableStateOf("") }
     var query by remember { mutableStateOf("") }
-    var status by remember { mutableStateOf("Connect to a Melodex Provider Bridge on your computer or NAS.") }
+    var status by remember { mutableStateOf("Connect to Chiasm on your computer or NAS.") }
     var results by remember { mutableStateOf<List<Track>>(emptyList()) }
     var nowPlaying by remember { mutableStateOf<Track?>(null) }
     val scope = rememberCoroutineScope()
 
     MaterialTheme(colorScheme = darkColorScheme()) {
-        Scaffold(topBar = { TopAppBar(title = { Text("Melodex") }) }) { pad ->
+        Scaffold(topBar = { TopAppBar(title = { Text("Chiasm") }) }) { pad ->
             Column(Modifier.padding(pad).padding(16.dp).fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("Your music. Your sources. One Flow.", style = MaterialTheme.typography.titleMedium)
+                Text("Explore your music.", style = MaterialTheme.typography.titleMedium)
                 OutlinedTextField(bridgeUrl, { bridgeUrl = it }, label = { Text("Bridge URL") }, modifier = Modifier.fillMaxWidth())
                 OutlinedTextField(token, { token = it }, label = { Text("Bridge token") }, modifier = Modifier.fillMaxWidth())
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

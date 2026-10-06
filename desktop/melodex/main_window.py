@@ -148,7 +148,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self._startup_timeline = startup_timeline
         self._startup_mark("main_window_init_enter")
-        self.setWindowTitle("Melodex")
+        self.setWindowTitle("Chiasm")
         self.resize(1280, 800)
         self.data_dir = app_data_dir()
         self.providers = ProviderManager(
@@ -304,6 +304,9 @@ class MainWindow(QMainWindow):
             # but no persistent index yet. Once indexed, later launches load the
             # cache immediately and do not walk the NAS automatically.
             QTimer.singleShot(0, lambda: self._start_local_scan("initial index"))
+        # Chiasm is the product in this fork: make the spatial collection the
+        # first screen while retaining inherited host pages for setup/support.
+        self.open_page("chiasm")
         self._startup_mark("main_window_init_ready")
 
     def _playback_current_track_changed(self, track: object) -> None:
@@ -351,7 +354,7 @@ class MainWindow(QMainWindow):
         brand = QHBoxLayout()
         brand.setSpacing(10)
         mark = QLabel()
-        mark_path = Path(__file__).resolve().parent / "assets" / "melodex-mark.png"
+        mark_path = Path(__file__).resolve().parent / "assets" / "chiasm-mark.png"
         pixmap = QPixmap(str(mark_path))
         if not pixmap.isNull():
             mark.setPixmap(
@@ -360,9 +363,9 @@ class MainWindow(QMainWindow):
         mark.setFixedSize(44, 44)
         titles = QVBoxLayout()
         titles.setSpacing(0)
-        logo = QLabel("MELODEX")
+        logo = QLabel("CHIASM")
         logo.setObjectName("brandName")
-        tagline = QLabel("Don't shuffle. Flow.")
+        tagline = QLabel("Explore your music.")
         tagline.setObjectName("brandTagline")
         titles.addWidget(logo)
         titles.addWidget(tagline)
@@ -1740,6 +1743,28 @@ class MainWindow(QMainWindow):
     def open_page(self, name: str):
         self.navigation.open_page(name)
 
+    def enter_chiasm_mode(self) -> None:
+        """Show Chiasm as the app surface while retaining host services privately."""
+        self.navigation.ensure_lazy_page_built("chiasm")
+        page = self.chiasm_feature.page
+        self.stack.removeWidget(page)
+        inherited_shell = self.takeCentralWidget()
+        self._inherited_shell_widget = inherited_shell
+        if inherited_shell is not None:
+            inherited_shell.hide()
+        self.menuBar().hide()
+        for action in self.findChildren(QAction):
+            action.setEnabled(False)
+        for shortcut in self.findChildren(QShortcut):
+            shortcut.setEnabled(False)
+        self.setCentralWidget(page)
+        page.show()
+        self.setWindowTitle("Chiasm")
+        self.statusBar().hide()
+        self.shortcut_palette.setEnabled(False)
+        self.shortcut_palette_mac.setEnabled(False)
+        self.resize(1440, 900)
+
     def _refresh_explore_visibility(self) -> None:
         has_library=bool(self.providers.local_catalog_count())
         if hasattr(self,"explore_wall_card"):
@@ -2574,6 +2599,8 @@ class MainWindow(QMainWindow):
         if p not in roots:
             roots.append(p)
         self.providers.configure_local_roots(roots)
+        if self.current_page == "chiasm":
+            self.chiasm_feature._status("Indexing collection…")
         came_from_home = self.current_page == "home"
         self._start_local_scan("folder added")
         if came_from_home:
@@ -2668,6 +2695,8 @@ class MainWindow(QMainWindow):
         )
 
     def _start_local_scan(self, reason: str = "scan") -> None:
+        if self.current_page == "chiasm":
+            self.chiasm_feature._status("Indexing collection…", 0)
         roots=self.providers.local_roots()
         if not roots:
             self.statusBar().showMessage("Add a music folder first",3000)
@@ -2791,6 +2820,8 @@ class MainWindow(QMainWindow):
         )
         self._refresh_library()
         self._show_home()
+        if self.current_page == "chiasm":
+            self.chiasm_feature.refresh()
         storage_message=scan_storage_message(outcome)
         if hasattr(self,"library_browser"):
             self.library_browser.finish_scan(

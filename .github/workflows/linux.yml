@@ -68,16 +68,16 @@ jobs:
           desktop/build_linux.sh "${BUILD_ARGS[@]}"
       - name: Validate package metadata
         run: |
-          desktop-file-validate desktop/linux/io.github.cliff_lee.Melodex.desktop
-          dpkg-deb --info desktop/dist/Melodex-linux-x86_64.deb
-          dpkg-deb --contents desktop/dist/Melodex-linux-x86_64.deb
-          test -x desktop/dist/Melodex-linux-x86_64.AppImage
+          desktop-file-validate desktop/linux/io.github.cliff_lee.Chiasm.desktop
+          dpkg-deb --info desktop/dist/Chiasm-linux-x86_64.deb
+          dpkg-deb --contents desktop/dist/Chiasm-linux-x86_64.deb
+          test -x desktop/dist/Chiasm-linux-x86_64.AppImage
       - uses: actions/upload-artifact@v4
         with:
-          name: Melodex-Linux-x86_64
+          name: Chiasm-Linux-x86_64
           path: |
-            desktop/dist/Melodex-linux-x86_64.deb
-            desktop/dist/Melodex-linux-x86_64.AppImage
+            desktop/dist/Chiasm-linux-x86_64.deb
+            desktop/dist/Chiasm-linux-x86_64.AppImage
 
   smoke-ubuntu:
     needs: build
@@ -90,24 +90,24 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: Melodex-Linux-x86_64
+          name: Chiasm-Linux-x86_64
           path: linux-artifacts
       - name: Install the .deb and run packaged GUI checks
         run: |
           sudo apt-get update
-          sudo apt-get install -y ./linux-artifacts/Melodex-linux-x86_64.deb
-          chmod +x linux-artifacts/Melodex-linux-x86_64.AppImage
-          python3 desktop/linux/smoke_launch.py /usr/bin/melodex
-          python3 desktop/linux/smoke_launch.py linux-artifacts/Melodex-linux-x86_64.AppImage --appimage
+          sudo apt-get install -y ./linux-artifacts/Chiasm-linux-x86_64.deb
+          chmod +x linux-artifacts/Chiasm-linux-x86_64.AppImage
+          python3 desktop/linux/smoke_launch.py /usr/bin/chiasm
+          python3 desktop/linux/smoke_launch.py linux-artifacts/Chiasm-linux-x86_64.AppImage --appimage
       - name: Measure installed .deb startup
         run: |
           python3 scripts/packaged_startup_probe.py \
-            /usr/bin/melodex \
+            /usr/bin/chiasm \
             --output "packaged-startup-deb-${{ matrix.os }}.json"
       - name: Measure AppImage startup
         run: |
           python3 scripts/packaged_startup_probe.py \
-            linux-artifacts/Melodex-linux-x86_64.AppImage \
+            linux-artifacts/Chiasm-linux-x86_64.AppImage \
             --appimage \
             --output "packaged-startup-appimage-${{ matrix.os }}.json"
       - name: Upload Linux packaged startup measurements
@@ -124,7 +124,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y appstream
-          appstreamcli validate --no-net desktop/linux/io.github.cliff_lee.Melodex.metainfo.xml
+          appstreamcli validate --no-net desktop/linux/io.github.cliff_lee.Chiasm.metainfo.xml
 
   smoke-debian:
     needs: build
@@ -133,18 +133,18 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: Melodex-Linux-x86_64
+          name: Chiasm-Linux-x86_64
           path: linux-artifacts
       - name: Install on Debian 12 and smoke-test both packages
         run: |
-          chmod +x linux-artifacts/Melodex-linux-x86_64.AppImage
+          chmod +x linux-artifacts/Chiasm-linux-x86_64.AppImage
           docker run --rm \
             -v "$PWD:/workspace" -w /workspace \
             debian:12-slim bash -euc '
               apt-get update
-              apt-get install -y python3 ./linux-artifacts/Melodex-linux-x86_64.deb
-              python3 desktop/linux/smoke_launch.py /usr/bin/melodex
-              python3 desktop/linux/smoke_launch.py linux-artifacts/Melodex-linux-x86_64.AppImage --appimage
+              apt-get install -y python3 ./linux-artifacts/Chiasm-linux-x86_64.deb
+              python3 desktop/linux/smoke_launch.py /usr/bin/chiasm
+              python3 desktop/linux/smoke_launch.py linux-artifacts/Chiasm-linux-x86_64.AppImage --appimage
             '
 
   attach-release-assets:
@@ -154,13 +154,13 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: Melodex-Linux-x86_64
+          name: Chiasm-Linux-x86_64
           path: linux-artifacts
       - name: Attach Linux packages to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ inputs.release_tag || github.ref_name }}
           files: |
-            linux-artifacts/Melodex-linux-x86_64.deb
-            linux-artifacts/Melodex-linux-x86_64.AppImage
+            linux-artifacts/Chiasm-linux-x86_64.deb
+            linux-artifacts/Chiasm-linux-x86_64.AppImage
           fail_on_unmatched_files: true

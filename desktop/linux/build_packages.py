@@ -14,7 +14,7 @@ from PIL import Image
 DESKTOP = Path(__file__).resolve().parents[1]
 REPO = DESKTOP.parent
 LINUX = DESKTOP / "linux"
-APP_ID = "io.github.cliff_lee.Melodex"
+APP_ID = "io.github.cliff_lee.Chiasm"
 
 DEBIAN_DEPENDS = [
     "libc6 (>= 2.35)",
@@ -92,50 +92,49 @@ def build_deb(version: str, output_dir: Path, frozen_app: Path, icon_source: Pat
     root = output_dir / "package-deb"
     shutil.rmtree(root, ignore_errors=True)
     (root / "DEBIAN").mkdir(parents=True)
-    app_destination = root / "opt/melodex"
+    app_destination = root / "opt/chiasm"
     app_destination.parent.mkdir(parents=True)
     shutil.copytree(frozen_app, app_destination, symlinks=True)
 
-    executable = app_destination / "Melodex"
+    executable = app_destination / "Chiasm"
     require_file(executable, "PyInstaller application executable")
-    launcher = root / "usr/bin/melodex"
+    launcher = root / "usr/bin/chiasm"
     launcher.parent.mkdir(parents=True)
     launcher.write_text(
-        "#!/bin/sh\nexec /opt/melodex/Melodex \"$@\"\n", encoding="utf-8"
+        "#!/bin/sh\nexec /opt/chiasm/Chiasm \"$@\"\n", encoding="utf-8"
     )
     launcher.chmod(0o755)
     copy_desktop_resources(root, icon_source)
 
-    copyright_path = root / "usr/share/doc/melodex/copyright"
+    copyright_path = root / "usr/share/doc/chiasm/copyright"
     copyright_path.parent.mkdir(parents=True)
     shutil.copy2(REPO / "LICENSE", copyright_path)
 
     control = "\n".join(
         [
-            "Package: melodex",
+            "Package: chiasm",
             f"Version: {version}",
             "Section: sound",
             "Priority: optional",
             "Architecture: amd64",
-            "Maintainer: Melodex contributors <cliff-lee@users.noreply.github.com>",
-            "Homepage: https://github.com/Cliff-Lee/melodex",
+            "Maintainer: Chiasm contributors <cliff-lee@users.noreply.github.com>",
+            "Homepage: https://github.com/DasManPack/chiasm",
             "Depends: " + ",\n " .join(DEBIAN_DEPENDS),
             "Suggests: ffmpeg",
-            "Description: local-first music player for thoughtful listening journeys",
-            " Melodex combines local playback, Flow sequencing, journeys, and a music map.",
-            " Optional extensions and AI control are available without being required.",
+            "Description: experimental spatial music collection explorer",
+            " Chiasm presents a spatial field for exploring a local music collection.",
             "",
         ]
     )
     (root / "DEBIAN/control").write_text(control, encoding="utf-8")
 
-    output = output_dir / "Melodex-linux-x86_64.deb"
+    output = output_dir / "Chiasm-linux-x86_64.deb"
     run(["dpkg-deb", "--build", "--root-owner-group", str(root), str(output)])
     return output
 
 
 def appimage_external_libraries(frozen_app: Path, appdir: Path) -> None:
-    candidates = [frozen_app / "Melodex"]
+    candidates = [frozen_app / "Chiasm"]
     candidates.extend(frozen_app.rglob("libqxcb.so"))
     candidates.extend(frozen_app.rglob("libqwayland*.so"))
     candidates.extend(frozen_app.rglob("libQt6XcbQpa.so*"))
@@ -182,28 +181,28 @@ def build_appimage(
     appimagetool: Path,
     runtime_file: Path,
 ) -> Path:
-    appdir = output_dir / "Melodex.AppDir"
+    appdir = output_dir / "Chiasm.AppDir"
     shutil.rmtree(appdir, ignore_errors=True)
-    library_dir = appdir / "usr/lib/melodex"
+    library_dir = appdir / "usr/lib/chiasm"
     library_dir.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(frozen_app, library_dir, symlinks=True)
-    executable = library_dir / "Melodex"
+    executable = library_dir / "Chiasm"
     require_file(executable, "PyInstaller application executable")
 
-    launcher = appdir / "usr/bin/melodex"
+    launcher = appdir / "usr/bin/chiasm"
     launcher.parent.mkdir(parents=True, exist_ok=True)
     launcher.write_text(
         '#!/bin/sh\nset -eu\n'
         'HERE="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"\n'
-        'exec "$HERE/../lib/melodex/Melodex" "$@"\n',
+        'exec "$HERE/../lib/chiasm/Chiasm" "$@"\n',
         encoding="utf-8",
     )
     launcher.chmod(0o755)
     (appdir / "AppRun").write_text((LINUX / "AppRun").read_text("utf-8"), encoding="utf-8")
     (appdir / "AppRun").chmod(0o755)
     appimage_desktop = (LINUX / f"{APP_ID}.desktop").read_text("utf-8")
-    appimage_desktop = appimage_desktop.replace("Exec=melodex", "Exec=AppRun")
-    appimage_desktop = appimage_desktop.replace("TryExec=melodex", "TryExec=AppRun")
+    appimage_desktop = appimage_desktop.replace("Exec=chiasm", "Exec=AppRun")
+    appimage_desktop = appimage_desktop.replace("TryExec=chiasm", "TryExec=AppRun")
     (appdir / f"{APP_ID}.desktop").write_text(appimage_desktop, encoding="utf-8")
     write_icon(icon_source, appdir / f"{APP_ID}.png")
     copy_desktop_resources(appdir, icon_source)
@@ -212,7 +211,7 @@ def build_appimage(
     )
     appimage_external_libraries(frozen_app, appdir)
 
-    output = output_dir / "Melodex-linux-x86_64.AppImage"
+    output = output_dir / "Chiasm-linux-x86_64.AppImage"
     env = os.environ.copy()
     env["ARCH"] = "x86_64"
     env["APPIMAGE_EXTRACT_AND_RUN"] = "1"
@@ -251,7 +250,7 @@ def package_version(app_version: str, *, allow_development: bool) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Build Melodex Linux packages.")
+    parser = argparse.ArgumentParser(description="Build Chiasm Linux packages.")
     parser.add_argument("--appimagetool", type=Path, required=True)
     parser.add_argument("--runtime-file", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, default=DESKTOP / "dist")
@@ -267,9 +266,9 @@ def main() -> int:
     version = (REPO / "VERSION").read_text("utf-8").strip()
     debian_version = package_version(version, allow_development=args.allow_development)
 
-    frozen_app = DESKTOP / "dist/Melodex"
+    frozen_app = DESKTOP / "dist/Chiasm"
     icon_source = REPO / "assets/icon.png"
-    require_file(frozen_app / "Melodex", "PyInstaller output")
+    require_file(frozen_app / "Chiasm", "PyInstaller output")
     require_file(icon_source, "application icon")
     require_file(args.appimagetool, "appimagetool")
     require_file(args.runtime_file, "AppImage type 2 runtime")
@@ -284,7 +283,7 @@ def main() -> int:
         args.appimagetool,
         args.runtime_file,
     )
-    print(f"Built Linux packages for Melodex {version}:\n  {deb}\n  {appimage}")
+    print(f"Built Linux packages for Chiasm {version}:\n  {deb}\n  {appimage}")
     return 0
 
 

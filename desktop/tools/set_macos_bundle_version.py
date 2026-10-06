@@ -42,7 +42,7 @@ def stamp_bundle(app_path: Path, version: str) -> tuple[str, str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Stamp a PyInstaller macOS app bundle with the Melodex version."
+        description="Stamp a PyInstaller macOS app bundle with the Chiasm preview version."
     )
     parser.add_argument("app", type=Path)
     parser.add_argument(

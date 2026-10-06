@@ -1,10 +1,10 @@
 # Third-Party Notices
 
-Melodex code is MIT licensed unless a subdirectory states otherwise. The notices below document design inspiration and external services/content used at runtime. External music, artwork and metadata are not relicensed under the Melodex MIT licence.
+Chiasm-specific work and inherited Melodex code are MIT licensed unless a subdirectory states otherwise. The notices below document upstream-derived foundations, design inspiration, and external services or content used at runtime. External music, artwork and metadata are not relicensed under either project's MIT licence.
 
 ## Parachord
 
-Melodex is an independent project. Its multi-source resolver design is inspired in part by Parachord and by the earlier Tomahawk approach to source-neutral music playback.
+Chiasm is a separate project derived from Melodex. The inherited multi-source resolver design was inspired in part by Parachord and by the earlier Tomahawk approach to source-neutral music playback.
 
 Parachord: https://github.com/Parachord/parachord
 
@@ -14,7 +14,7 @@ Copyright (c) 2025 Jason Herskowitz
 
 The full Parachord MIT license is reproduced in `docs/licenses/PARACHORD-LICENSE.txt`.
 
-The resolver code added to Melodex was independently implemented for Melodex rather than copied from Parachord source files. The notice is included to document design inspiration clearly and to keep the repository ready for any future MIT-compatible reuse that is explicitly identified in source.
+The resolver code added to Melodex was independently implemented rather than copied from Parachord source files. This notice documents design inspiration and retained upstream attribution.
 
 ## MusicBrainz / MetaBrainz Foundation
 

@@ -1,21 +1,21 @@
 blank_issues_enabled: false
 contact_links:
   - name: Start here
-    url: https://github.com/Cliff-Lee/melodex/blob/main/docs/START_HERE.md
-    about: New to Melodex as a listener? Start here.
-  - name: Developer start page
-    url: https://github.com/Cliff-Lee/melodex/blob/main/docs/DEVELOPERS.md
-    about: Providers, plugins, REST/OpenAPI, MCP and OpenAI integrations.
+    url: https://github.com/DasManPack/chiasm/blob/main/docs/START_HERE.md
+    about: New to Chiasm? Start with the spatial music exploration preview.
+  - name: Chiasm design and interaction
+    url: https://github.com/DasManPack/chiasm/blob/main/docs/CHIASM.md
+    about: Product direction, spatial field, and current interaction.
   - name: First contribution
-    url: https://github.com/Cliff-Lee/melodex/blob/main/docs/FIRST_CONTRIBUTION.md
-    about: A small, practical path for contributing to the repository.
+    url: https://github.com/DasManPack/chiasm/blob/main/CONTRIBUTING.md
+    about: Contribution paths and Chiasm design principles.
   - name: Community guide
-    url: https://github.com/Cliff-Lee/melodex/blob/main/docs/COMMUNITY.md
-    about: Ways to contribute even if you do not know the whole codebase.
+    url: https://github.com/DasManPack/chiasm/blob/main/docs/TESTING.md
+    about: Help test the spatial collection experience.
   - name: Troubleshooting
-    url: https://github.com/Cliff-Lee/melodex/blob/main/docs/TROUBLESHOOTING.md
-    about: Common setup and playback problems.
+    url: https://github.com/DasManPack/chiasm/blob/main/docs/CHIASM_CAMPAIGN.md
+    about: Progress, acceptance checks, and known open work.
 
   - name: Community discussions
-    url: https://github.com/Cliff-Lee/melodex/discussions
-    about: Ask questions, share early ideas and talk with other Melodex users.
+    url: https://github.com/DasManPack/chiasm/discussions
+    about: Ask questions, share early ideas and talk with other Chiasm users.

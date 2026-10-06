@@ -1,33 +1,22 @@
-# Melodex 0.1.0 public preview
+# Chiasm 0.1.0 experimental preview
 
-This is the first clean, source-neutral public foundation.
+Chiasm is a spatial-first experiment in music collection exploration. This preview opens directly into the album field and uses a new Chiasm identity and desktop package name.
 
 ## Included
 
-- macOS/Windows desktop source
-- Android Bridge-client source
-- GitHub Actions native build workflows
-- Local Files provider
-- Jamendo legal/reference online provider requiring the user's own client ID
-- installable MPP v1 desktop providers
-- Provider Bridge with authenticated local-media streaming and byte-range support
-- Flow local DSP engine
-- Play for Me / taste memory
-- Moments and playlists
-- optional OpenWebUI/Ollama/OpenAI-compatible control
-- complete Provider SDK
-- user and developer documentation
+- Chiasm spatial field with album focus, Horizon relationships, Arc routes, and Trace history
+- local collection and artwork adaptation through foundations derived from Melodex
+- playback through the inherited local playback engine
+- Apple Silicon, Intel Mac, Windows, and Android test packages built by GitHub Actions
+- Chiasm-branded Android bridge companion with its own app identity
+- standalone fictional-collection field demo (`python -m chiasm.run`)
 
-## Build outputs after tagging on GitHub
+## Preview limits
 
-- macOS ARM64 DMG
-- macOS Intel DMG (while the `macos-13` GitHub runner remains available)
-- Windows portable ZIP
-- Windows Inno Setup EXE
-- Android directly installable debug APK for preview/testing
-- Android unsigned release AAB for subsequent store signing
-- source ZIP
+- This is an experimental test build, not a stable public release.
+- Workflow artifacts expire; use the latest successful desktop workflow run.
+- macOS packages are ad-hoc signed and not notarized.
+- The Android app is an early bridge companion; the spatial collection field is currently desktop-focused.
+- Accessibility, real-library usability, and visual acceptance remain in active testing.
 
-## Important release note
-
-Production app-store distribution still requires your own platform signing identities/keys. The repository intentionally contains no private signing material.
+Chiasm is a separate project derived from Melodex. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for retained upstream and third-party notices.

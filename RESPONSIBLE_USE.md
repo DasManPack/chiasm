@@ -1,6 +1,6 @@
 # Responsible use and source policy
 
-Melodex is a general-purpose music player, sequencing engine, and provider framework. It is designed to work with music and media that a user is authorized to access.
+Chiasm is an experimental spatial interface for exploring music collections. It reuses parts of Melodex's local playback and provider foundations and is designed to work with music and media that a user is authorized to access.
 
 ## What is built into the desktop app
 
@@ -21,7 +21,7 @@ The repository also contains project-maintained/reference material built on the 
 - an Internet Archive reference provider for publicly accessible material;
 - registry example packages for Radio Browser and LibriVox;
 - registry example extensions for MusicBrainz and Wikimedia Commons;
-- the Melodex Provider Protocol (MPP), Provider SDK, capability-extension contracts, and registry tooling.
+- the inherited Melodex Provider Protocol (MPP), Provider SDK, capability-extension contracts, and registry tooling.
 
 A reference/example integration does **not** imply that every item exposed by the upstream service has identical rights or licence terms.
 

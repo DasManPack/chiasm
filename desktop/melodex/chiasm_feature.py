@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Callable
 
-from PySide6.QtCore import QObject, Signal
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
+from PySide6.QtCore import QObject, Signal, Qt
+from PySide6.QtGui import QPixmap
+from PySide6.QtWidgets import QLabel, QHBoxLayout, QPushButton, QVBoxLayout, QWidget
 
 
 class ChiasmFeature(QObject):
@@ -23,6 +25,7 @@ class ChiasmFeature(QObject):
     setPlayingRequested = Signal(bool)
     statusMessageRequested = Signal(str, int)
     interactionMeasured = Signal(str, float)
+    addMusicFolderRequested = Signal()
 
     def __init__(
         self,
@@ -127,11 +130,28 @@ class ChiasmFeature(QObject):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(0)
 
-        title = QLabel("Chiasm")
-        title.setObjectName("pageTitle")
-        layout.addWidget(title)
-        self.page_titles["chiasm"] = title
-        title.hide()
+        header = QHBoxLayout()
+        header.setContentsMargins(16, 12, 16, 8)
+        header.setSpacing(10)
+        mark = QLabel()
+        mark_path = Path(__file__).resolve().parent / "assets" / "chiasm-mark.png"
+        pixmap = QPixmap(str(mark_path))
+        if not pixmap.isNull():
+            mark.setPixmap(pixmap.scaled(30, 30, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        mark.setFixedSize(30, 30)
+        mark.setAccessibleName("Chiasm")
+        header.addWidget(mark)
+        header.addStretch(1)
+        add_folder = QPushButton("＋  Add folder")
+        add_folder.setObjectName("chiasmAddFolder")
+        add_folder.setMinimumSize(112, 36)
+        add_folder.setToolTip("Add a music folder")
+        add_folder.setAccessibleName("Add a music folder")
+        add_folder.setCursor(Qt.PointingHandCursor)
+        add_folder.clicked.connect(self.addMusicFolderRequested.emit)
+        header.addWidget(add_folder)
+        layout.addLayout(header)
+        self.page_titles["chiasm"] = mark
 
         self.chiasm_adapter = MelodexCollectionAdapter(
             self.providers,
@@ -529,9 +549,14 @@ def create_chiasm_feature(host: Any) -> ChiasmFeature:
     feature.replaceUpcomingRequested.connect(host.player.replace_upcoming)
     feature.setPlayingRequested.connect(host.player.set_playing)
     feature.statusMessageRequested.connect(
-        lambda message, timeout: host.statusBar().showMessage(message, timeout)
+        lambda message, timeout: (
+            feature.chiasm_canvas.show_notice(message, timeout)
+            if feature.chiasm_canvas is not None
+            else host.statusBar().showMessage(message, timeout)
+        )
     )
     feature.interactionMeasured.connect(host.responsiveness.record_interaction)
+    feature.addMusicFolderRequested.connect(host._choose_music_folder)
     host.player.trackChanged.connect(feature.on_track_changed)
     host.player.playingChanged.connect(feature.on_playing_changed)
     host.player.positionChanged.connect(feature.on_position_changed)

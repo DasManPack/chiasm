@@ -593,6 +593,86 @@ def capture(out: Path, width: int = 1440, height: int = 900) -> dict[str, object
     )
     chiasm_large.deleteLater()
 
+    discovery_albums, known_index = _chiasm_collection(50)
+    known_album = discovery_albums[known_index]
+    connected_album = next(
+        album
+        for album in discovery_albums
+        if album.id != known_album.id
+        and album.artist != known_album.artist
+        and set(album.genres).intersection(known_album.genres)
+    )
+
+    discovery_horizon = FieldCanvas(discovery_albums)
+    discovery_horizon.camera.center_x = known_album.x
+    discovery_horizon.camera.center_y = known_album.y
+    discovery_horizon.camera.zoom = 1.28
+    discovery_horizon.focus_album(known_album)
+    discovery_horizon.open_lens()
+    _save_widget(
+        discovery_horizon,
+        out / "14-chiasm-discovery-horizon.png",
+        width,
+        height,
+    )
+    record(
+        "14-chiasm-discovery-horizon.png",
+        "C11 starting point: a familiar album with a named shared-genre Horizon link to a less familiar album.",
+    )
+    discovery_horizon.deleteLater()
+
+    discovery_trace = FieldCanvas(discovery_albums, live_playback=True)
+    discovery_trace.camera.center_x = connected_album.x
+    discovery_trace.camera.center_y = connected_album.y
+    discovery_trace.camera.zoom = 1.28
+    discovery_trace.set_playback_state(
+        {
+            "artist": connected_album.artist,
+            "title": "Blue Hour",
+            "local_path": "/synthetic/discovery/track.flac",
+        },
+        playing=True,
+        position_ms=48_000,
+        duration_ms=216_000,
+        album_id=connected_album.id,
+        can_next=True,
+    )
+    discovery_trace.set_trace(
+        [
+            {
+                "album_id": connected_album.id,
+                "title": connected_album.title,
+                "artist": connected_album.artist,
+                "activity": "listen",
+                "recorded_at": 2.0,
+                "playable": True,
+            },
+            {
+                "album_id": known_album.id,
+                "title": known_album.title,
+                "artist": known_album.artist,
+                "activity": "explore",
+                "recorded_at": 1.0,
+                "playable": True,
+            },
+        ]
+    )
+    discovery_trace.focus_album(connected_album)
+    discovery_trace.open_lens()
+    discovery_trace._lens_panel = "trace"
+    discovery_trace._refresh_accessible_description()
+    _save_widget(
+        discovery_trace,
+        out / "15-chiasm-discovery-trace.png",
+        width,
+        height,
+    )
+    record(
+        "15-chiasm-discovery-trace.png",
+        "C11 return point: a connected album playing, with the familiar starting album in Trace.",
+    )
+    discovery_trace.deleteLater()
+
     QApplication.processEvents()
     art_path.unlink(missing_ok=True)
     bright_art_path.unlink(missing_ok=True)

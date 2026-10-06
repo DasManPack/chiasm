@@ -1120,6 +1120,97 @@ class ChiasmFieldTests(unittest.TestCase):
         field.deleteLater()
         app.processEvents()
 
+    def test_reveal_album_keeps_the_field_and_opens_its_lens(self):
+        os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+        try:
+            from PySide6.QtWidgets import QApplication
+
+            from chiasm.field_model import Album
+            from chiasm.field_view import FieldCanvas
+        except ImportError as exc:
+            self.skipTest(f"Qt desktop runtime is unavailable: {exc}")
+
+        app = QApplication.instance() or QApplication([])
+        album = Album("known", "Known Record", "Aster", "", 840, -320, 0)
+        field = FieldCanvas((album,), live_playback=True)
+        field.resize(900, 640)
+        field.show()
+        field.camera.zoom = 1.35
+        focused: list[str] = []
+        field.albumFocused.connect(focused.append)
+
+        self.assertTrue(field.reveal_album(album.id))
+        self.assertEqual(field.focused_id, album.id)
+        self.assertTrue(field._lens_open)
+        self.assertEqual((field.camera.center_x, field.camera.center_y), (album.x, album.y))
+        self.assertEqual(field.camera.zoom, 1.35)
+        self.assertEqual(focused, [album.id])
+        self.assertFalse(field.reveal_album("missing"))
+
+        field.deleteLater()
+        app.processEvents()
+
+    def test_chiasm_finder_uses_artist_match_and_returns_to_the_field(self):
+        os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+        try:
+            from PySide6.QtCore import Qt
+            from PySide6.QtTest import QTest
+            from PySide6.QtWidgets import QApplication
+
+            from chiasm.field_model import Album
+            from melodex.chiasm_feature import ChiasmFeature
+        except ImportError as exc:
+            self.skipTest(f"Qt desktop runtime is unavailable: {exc}")
+
+        app = QApplication.instance() or QApplication([])
+
+        class State:
+            @staticmethod
+            def recent_chiasm_trace(_limit):
+                return []
+
+            @staticmethod
+            def record_chiasm_trace(*_args, **_kwargs):
+                pass
+
+        feature = ChiasmFeature(
+            object(),
+            State(),
+            local_intelligence=lambda: None,
+            metadata=lambda: None,
+            run_async=lambda *_args, **_kwargs: None,
+            player_status=lambda: {},
+            current_track=lambda: None,
+            page_titles={},
+        )
+        feature.build()
+        familiar = Album("familiar", "North Window", "Aster", "", -420, 190, 0)
+        target = Album("target", "Quiet Harbor", "Boreal", "", 960, -510, 1)
+        albums = (familiar, target)
+        feature.chiasm_canvas.set_albums(albums)
+        feature._refresh_album_search_index(albums)
+        feature.chiasm_canvas.camera.zoom = 1.2
+
+        feature.chiasm_canvas.setFocus()
+        QTest.keyClick(feature.chiasm_canvas, Qt.Key_F, Qt.ControlModifier)
+        app.processEvents()
+        self.assertTrue(feature.album_search.isVisible())
+        feature.album_search.setText("Boreal")
+        feature._submit_album_search()
+        app.processEvents()
+
+        self.assertEqual(feature.chiasm_canvas.focused_id, target.id)
+        self.assertTrue(feature.chiasm_canvas._lens_open)
+        self.assertEqual(
+            (feature.chiasm_canvas.camera.center_x, feature.chiasm_canvas.camera.center_y),
+            (target.x, target.y),
+        )
+        self.assertEqual(feature.chiasm_canvas.camera.zoom, 1.2)
+        self.assertFalse(feature.album_search.isVisible())
+
+        feature.page.deleteLater()
+        app.processEvents()
+
     def test_accessible_description_notifies_qt_only_when_text_changes(self):
         os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
         try:

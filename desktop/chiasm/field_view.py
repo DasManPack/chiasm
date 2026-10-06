@@ -54,6 +54,7 @@ class FieldCanvas(QWidget):
 
     mockPlayed = Signal(str)
     albumFocused = Signal(str)
+    findRequested = Signal()
     interactionMeasured = Signal(str, float)
     playRequested = Signal(str)
     playPauseRequested = Signal()
@@ -169,6 +170,7 @@ class FieldCanvas(QWidget):
             "playback is available. Enter opens or closes the focused album lens. Escape "
             "closes an open lens, or clears focus when the lens is closed. In an open lens, "
             "The left and right bracket keys focus the previous or next album in collection order. "
+            "Ctrl+F opens the in-field album finder. "
             "Ctrl+Tab switches between Horizon and Trace; Ctrl+Shift+Tab switches back. "
             "In Trace, PageUp and PageDown browse older and newer stops. "
             "Select a displayed entry or press 1 to 3 to follow it. "
@@ -479,6 +481,21 @@ class FieldCanvas(QWidget):
         self.hovered_id = None
         self._home_cue_hovered = False
         self.update()
+
+    def reveal_album(self, album_id: str, *, open_lens: bool = True) -> bool:
+        """Bring a known collection album into view without leaving the field."""
+        album = self.album_by_id(str(album_id or ""))
+        if album is None:
+            return False
+        self.camera.center_x = album.x
+        self.camera.center_y = album.y
+        self.hovered_id = None
+        self._hover_position = None
+        self.focus_album(album)
+        if open_lens:
+            self.open_lens()
+        self.update()
+        return True
 
     def paintEvent(self, _event) -> None:  # noqa: N802 - Qt virtual method
         painter = QPainter(self)
@@ -2125,7 +2142,13 @@ class FieldCanvas(QWidget):
         return super().event(event)
 
     def keyPressEvent(self, event) -> None:  # noqa: N802
-        if event.key() == Qt.Key_Escape:
+        if (
+            event.key() == Qt.Key_F
+            and event.modifiers() & Qt.ControlModifier
+        ):
+            self.findRequested.emit()
+            event.accept()
+        elif event.key() == Qt.Key_Escape:
             if self._lens_open:
                 self.close_lens()
             else:

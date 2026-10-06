@@ -6,12 +6,15 @@ from pathlib import Path
 from typing import Any, Callable
 
 from PySide6.QtCore import QObject, Signal, Qt
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
+    QCompleter,
     QFileDialog,
     QLabel,
     QHBoxLayout,
+    QLineEdit,
     QPushButton,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
@@ -149,6 +152,35 @@ class ChiasmFeature(QObject):
         mark.setAccessibleName("Chiasm")
         header.addWidget(mark)
         header.addStretch(1)
+        self.find_album_button = QToolButton()
+        self.find_album_button.setText("Find")
+        self.find_album_button.setObjectName("chiasmFindAlbum")
+        self.find_album_button.setMinimumSize(54, 36)
+        self.find_album_button.setAccessibleName("Find an album or artist")
+        self.find_album_button.setToolTip("Find an album or artist in this field (Ctrl+F)")
+        self.find_album_button.setEnabled(False)
+        self.find_album_button.clicked.connect(self._show_album_search)
+        header.addWidget(self.find_album_button)
+
+        self.album_search = QLineEdit(self.page)
+        self.album_search.setObjectName("chiasmAlbumSearch")
+        self.album_search.setPlaceholderText("Album or artist")
+        self.album_search.setAccessibleName("Find an album or artist in this collection")
+        self.album_search.setClearButtonEnabled(True)
+        self.album_search.setFixedWidth(250)
+        self.album_search.hide()
+        self._album_search_model = QStandardItemModel(self.album_search)
+        self._album_search_completer = QCompleter(self._album_search_model, self.album_search)
+        self._album_search_completer.setCaseSensitivity(Qt.CaseInsensitive)
+        self._album_search_completer.setFilterMode(Qt.MatchContains)
+        self._album_search_completer.setCompletionMode(QCompleter.PopupCompletion)
+        self.album_search.setCompleter(self._album_search_completer)
+        self._album_search_completer.activated[str].connect(
+            self._choose_album_search_result
+        )
+        self.album_search.returnPressed.connect(self._submit_album_search)
+        header.addWidget(self.album_search)
+
         add_folder = QPushButton("＋  Add folder")
         add_folder.setObjectName("chiasmAddFolder")
         add_folder.setMinimumSize(112, 36)
@@ -171,6 +203,7 @@ class ChiasmFeature(QObject):
             live_playback=True,
         )
         self.chiasm_canvas.interactionMeasured.connect(self.interactionMeasured.emit)
+        self.chiasm_canvas.findRequested.connect(self._show_album_search)
         self.chiasm_canvas.albumFocused.connect(
             lambda album_id: self._record_chiasm_trace_event(album_id, "explore")
         )
@@ -457,6 +490,7 @@ class ChiasmFeature(QObject):
         }
         albums = tuple(payload.get("albums") or ())
         self.chiasm_canvas.set_albums(albums)
+        self._refresh_album_search_index(albums)
         self._refresh_chiasm_trace()
         self._record_chiasm_listening_album(self._current_track_getter())
         self._sync_chiasm_playback()
@@ -479,6 +513,81 @@ class ChiasmFeature(QObject):
                 "double-click or open a lens to play"
             )
         self._status(message, 5000)
+
+    def _refresh_album_search_index(self, albums: tuple[Any, ...]) -> None:
+        model = getattr(self, "_album_search_model", None)
+        if model is None:
+            return
+        model.clear()
+        entries = []
+        labels: dict[str, int] = {}
+        for album in albums:
+            title = str(getattr(album, "title", "") or "Untitled album").strip()
+            artist = str(getattr(album, "artist", "") or "Unknown artist").strip()
+            label = f"{title} — {artist}"
+            labels[label] = labels.get(label, 0) + 1
+            entries.append((album, title, artist, label))
+        used_labels: set[str] = set()
+        for album, title, artist, label in entries:
+            if labels[label] > 1:
+                suffix = str(getattr(album, "region", "") or "").strip()
+                if not suffix:
+                    suffix = str(getattr(album, "id", "") or "")[:8]
+                label = f"{label} · {suffix}"
+                if label in used_labels:
+                    label = f"{label} · {str(getattr(album, 'id', '') or '')[:8]}"
+            used_labels.add(label)
+            item = QStandardItem(label)
+            item.setData(str(getattr(album, "id", "") or ""), Qt.UserRole)
+            model.appendRow(item)
+        self.find_album_button.setEnabled(bool(albums))
+        if not albums:
+            self.album_search.clear()
+            self.album_search.hide()
+
+    def _show_album_search(self) -> None:
+        if self.chiasm_canvas is None or not self.chiasm_canvas.albums:
+            return
+        self.album_search.show()
+        self.album_search.setFocus(Qt.ShortcutFocusReason)
+        self.album_search.selectAll()
+
+    def _submit_album_search(self) -> None:
+        query = self.album_search.text().strip().casefold()
+        if not query:
+            return
+        completer = self._album_search_completer
+        current = str(completer.currentCompletion() or "")
+        labels = [
+            str(self._album_search_model.item(row).text())
+            for row in range(self._album_search_model.rowCount())
+        ]
+        candidate = current if query in current.casefold() else next(
+            (label for label in labels if query in label.casefold()),
+            "",
+        )
+        if candidate:
+            self._choose_album_search_result(candidate)
+            return
+        self._status(
+            f'No album or artist found for “{self.album_search.text().strip()}”',
+            3500,
+        )
+
+    def _choose_album_search_result(self, label: str) -> None:
+        wanted = str(label or "")
+        album_id = ""
+        for row in range(self._album_search_model.rowCount()):
+            item = self._album_search_model.item(row)
+            if item is not None and item.text() == wanted:
+                album_id = str(item.data(Qt.UserRole) or "")
+                break
+        if not album_id or self.chiasm_canvas is None:
+            return
+        if self.chiasm_canvas.reveal_album(album_id):
+            self.album_search.clear()
+            self.album_search.hide()
+            self.chiasm_canvas.setFocus(Qt.ShortcutFocusReason)
 
     def _chiasm_artwork_requested(self, request: object) -> None:
         if not isinstance(request, dict) or self.chiasm_canvas is None:

@@ -19,7 +19,7 @@ jobs:
       - name: Install Qt Multimedia system dependency
         run: |
           sudo apt-get update
-          sudo apt-get install -y libpulse0
+          sudo apt-get install -y libegl1 libgl1 libpulse0
       - run: pip install pytest numpy mutagen requests PySide6
       - run: python -m compileall -q desktop/melodex provider-sdk/examples/ecosystem
       - name: Desktop tests

@@ -592,8 +592,7 @@ def choose_music_folder(host: Any) -> None:
 
 def enter_chiasm_mode(host: Any) -> None:
     """Make the spatial field the only visible application surface."""
-    from PySide6.QtGui import QAction
-    from PySide6.QtWidgets import QShortcut
+    from PySide6.QtGui import QAction, QShortcut
 
     host.open_page("chiasm")
     host.navigation.ensure_lazy_page_built("chiasm")
